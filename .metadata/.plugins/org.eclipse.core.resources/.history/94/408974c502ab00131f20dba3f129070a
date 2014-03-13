@@ -6,10 +6,6 @@
  * Project = SpotMapper
  * 
  * Package = com.jbentley.spotmapper
- * 
- * 
- * MainNavActivity is the main class for the application "Spot Mapper."  This activity shows a GoogleMap with the current 
- * device location.  A listview will be implemented for Milestone 2 to display saved locations.
  */
 package com.jbentley.spotmapper;
 

@@ -6,9 +6,6 @@
  * Project = SpotMapper
  * 
  * Package = com.jbentley.spotmapper
- * 
- * 
- * LocationDataBaseHelper extends SQLiteOpenHelper to store location information internally to the device.
  */
 package com.jbentley.spotmapper;
 
