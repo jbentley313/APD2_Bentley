@@ -5,8 +5,7 @@
         android:icon="@drawable/ic_action_settings"
         android:orderInCategory="100"
         android:showAsAction="ifRoom"
-        android:title="@string/action_settings"
-        android:enabled="false"/>
+        android:title="@string/action_settings"/>
     <item
         android:id="@+id/addNavIcon"
         android:icon="@drawable/ic_action_addnav"

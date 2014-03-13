@@ -63,10 +63,7 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		settingsIcon = menu.findItem(R.id.action_settings);
 		addNavIcon = menu.findItem(R.id.addNavIcon).setVisible(false);
 
-		
-		
 		return super.onCreateOptionsMenu(menu);
-		
 	}
 
 
@@ -133,12 +130,8 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		String longString = longDouble.toString();
 
 
-		if (!locNameText.isEmpty()) {
-
-			//add location to the database
-			locDb.addLocationtoDB(new LocationInfo(locNameText, latString, longString, isTaggedForGeo));
-		}
-		
+		//add location to the database
+		locDb.addLocationtoDB(new LocationInfo(locNameText, latString, longString, isTaggedForGeo));
 
 
 		//get all locations to be displayed
@@ -249,7 +242,6 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		Log.d(Tag, "startLocationListen");
 
 		boolean GPSenabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-		boolean NETWORKendabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
 		if (GPSenabled) {
 
@@ -271,9 +263,6 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 
 			displayLocationSettingsAlert();
 
-		}
-		if (NETWORKendabled) {
-			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000/*10 seconds*/, 0, this);
 		}
 
 
