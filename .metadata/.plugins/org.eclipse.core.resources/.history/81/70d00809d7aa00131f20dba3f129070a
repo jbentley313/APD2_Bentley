@@ -1,9 +1,12 @@
 package com.jbentley.spotmapper;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class LocationInfo {
 
 	int _id;
 	String _locationName;
+//	String _locationCoordinates;
 	String _locationLatitude;
 	String _locationLongitude;
 	Boolean _taggedForGeo;

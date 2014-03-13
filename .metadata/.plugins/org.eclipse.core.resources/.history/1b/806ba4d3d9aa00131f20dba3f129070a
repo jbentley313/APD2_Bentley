@@ -70,7 +70,9 @@ public class LocationDataBaseHelper extends SQLiteOpenHelper{
 		
 		Log.i("ADD to DATABASE", cValues.toString());
 		
-		
+		//close the db
+//		locDb.close();
+			
 	}
 
 	//get all locations from DB

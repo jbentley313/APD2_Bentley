@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 public class MainNavActivity extends FragmentActivity implements  android.location.LocationListener, LocationDialogFragmentListener{
 	private static final String Tag = "[X][X] MainNavActivity ";

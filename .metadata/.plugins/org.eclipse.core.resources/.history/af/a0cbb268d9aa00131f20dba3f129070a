@@ -17,8 +17,6 @@ public class LocationDataBaseHelper extends SQLiteOpenHelper{
 	private static final String LOCATION_DATABASE_NAME = "locationDatabase";
 	private static final String LOCATION_DATABASE_TABLE_NAME = "locations";
 
-	SQLiteDatabase locDb = this.getWritableDatabase();
-	
 	//db column names
 	private static final String LOC_ID = "id";
 	private static final String LOC_NAME = "location_name";
@@ -58,7 +56,7 @@ public class LocationDataBaseHelper extends SQLiteOpenHelper{
 
 	//add location to DB
 	public void addLocationtoDB(LocationInfo locInfo){
-		 
+		SQLiteDatabase locDb = this.getWritableDatabase();
 		ContentValues cValues = new ContentValues();
 		cValues.put(LOC_NAME, locInfo.getlocName());
 		cValues.put(LOC_LATITUDE, locInfo.getlocLatitude());
@@ -70,7 +68,9 @@ public class LocationDataBaseHelper extends SQLiteOpenHelper{
 		
 		Log.i("ADD to DATABASE", cValues.toString());
 		
-		
+		//close the db
+		locDb.close();
+			
 	}
 
 	//get all locations from DB
@@ -80,8 +80,9 @@ public class LocationDataBaseHelper extends SQLiteOpenHelper{
 	    // Select All Query
 	    String selectAllLocations = "SELECT  * FROM " + LOCATION_DATABASE_TABLE_NAME;
 	 
-	    
-	    Cursor cursor = locDb.rawQuery(selectAllLocations, null);
+	    //get writable database
+	    SQLiteDatabase db = this.getWritableDatabase();
+	    Cursor cursor = db.rawQuery(selectAllLocations, null);
 	 
 	    //loop thru database and build a list of saved locations
 	    if (cursor.moveToFirst()) {
