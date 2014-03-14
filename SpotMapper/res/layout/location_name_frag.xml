@@ -22,7 +22,15 @@
     <CheckBox
         android:id="@+id/flagForGeo"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/enable_geofencing_for_this_location_" />
+
+    <Button
+        android:id="@+id/dialogSaveBtn"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" 
-        android:text="@string/enable_geofencing_for_this_location_"/>
+        android:layout_marginLeft="75dp"
+        android:layout_marginRight="75dp"
+        android:text="@string/save"/>
 
 </LinearLayout>

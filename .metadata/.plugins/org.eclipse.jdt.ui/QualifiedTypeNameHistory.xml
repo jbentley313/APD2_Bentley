@@ -2,4 +2,5 @@
 <qualifiedTypeNameHistroy>
 <fullyQualifiedTypeName name="com.jbentley.spotmapper.R.id"/>
 <fullyQualifiedTypeName name="android.location.LocationManager"/>
+<fullyQualifiedTypeName name="com.google.android.gms.maps.model.Marker"/>
 </qualifiedTypeNameHistroy>

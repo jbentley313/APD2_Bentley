@@ -77,10 +77,10 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		settingsIcon = menu.findItem(R.id.action_settings);
 		addNavIcon = menu.findItem(R.id.addNavIcon).setVisible(false);
 
-		
-		
+
+
 		return super.onCreateOptionsMenu(menu);
-		
+
 	}
 
 
@@ -123,26 +123,23 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		Log.i(Tag,  (locNameText + ", " + isTaggedForGeo.toString() + ", " + myLoc));
 
 		LocationDataBaseHelper locDb = new LocationDataBaseHelper(this);
-		
+
 		//Dispaly a snippet on a pin if loc is tagged for geo
 		String geoDisplay;
-		
+
 		if (isTaggedForGeo){
 			geoDisplay = "Tagged for Geofence";
 		} else {
 			geoDisplay = "Not tagged for Geofence";
 		}
-		
+
 		//add map marker
 		Marker savedLocMarker = mMap.addMarker(new MarkerOptions()
 		.position(myLoc)
 		.title(locNameText)
 		.snippet(geoDisplay));
-		
+
 		savedLocMarker.showInfoWindow();
-		
-		
-	
 
 		//Split the lat and long into two strings that are saved on the db
 		Double latDouble = myLoc.latitude;
@@ -156,8 +153,6 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 			//add location to the database
 			locDb.addLocationtoDB(new LocationInfo(locNameText, latString, longString, isTaggedForGeo));
 		}
-		
-
 
 		//get all locations to be displayed
 		List<LocationInfo> locs = locDb.getAllLocs();       
@@ -191,38 +186,29 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 	@Override
 	public void onLocationChanged(Location location) {
 		// TODO Auto-generated method stub
-		
-		
-		
+
 		myLoc = (new LatLng(location.getLatitude(), location.getLongitude()));
 
 		//animate map to zoom to current location
 		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLoc, 19.0f));
-		
+
 		//enable add nav icon after a location is obtained
-				addNavIcon.setVisible(true);
-
+		addNavIcon.setVisible(true);
 	}
-
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 		// TODO Auto-generated method stub
-
 	}
-
 
 	@Override
 	public void onProviderEnabled(String provider) {
 		// TODO Auto-generated method stub
-
 	}
-
 
 	@Override
 	public void onProviderDisabled(String provider) {
 		// TODO Auto-generated method stub
-
 	}
 
 	//display alert if location is turned off
@@ -256,9 +242,7 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		// TODO Auto-generated method stub
 		super.onResume();
 
-
 		startLocationListen();
-
 
 	}
 
@@ -288,16 +272,11 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		} else {
 
 			displayLocationSettingsAlert();
-
 		}
 		if (NETWORKendabled) {
 			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000/*10 seconds*/, 0, this);
 		}
 
-
 	}
-
-
-
 
 }
