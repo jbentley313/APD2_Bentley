@@ -21,6 +21,7 @@ import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.jbentley.spotmapper.LocationDialogFragment.LocationDialogFragmentListener;
 import android.app.ActionBar;
@@ -133,10 +134,14 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		}
 		
 		//add map marker
-		mMap.addMarker(new MarkerOptions()
+		Marker savedLocMarker = mMap.addMarker(new MarkerOptions()
 		.position(myLoc)
 		.title(locNameText)
 		.snippet(geoDisplay));
+		
+		savedLocMarker.showInfoWindow();
+		
+		
 	
 
 		//Split the lat and long into two strings that are saved on the db
@@ -162,7 +167,7 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 			String dispalyLocs = "id: "+locationsaved.getId()+
 					" , Location Name: " + locationsaved.getlocName() + 
 					" , Location: Latitude " + locationsaved.getlocLatitude() + 
-					" , Longitude" + locationsaved.getlocLongitude() +
+					" , Longitude " + locationsaved.getlocLongitude() +
 					" , tagged for geofence: " + locationsaved.gettaggedForGeo();
 
 			Log.i("Location", dispalyLocs);

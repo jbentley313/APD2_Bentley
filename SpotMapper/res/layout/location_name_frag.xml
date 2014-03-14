@@ -10,7 +10,7 @@
         android:id="@+id/nameThisLoc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Name this location" />
+        android:text="@string/name_this_location" />
 
     <EditText
         android:id="@+id/locName"
@@ -23,6 +23,6 @@
         android:id="@+id/flagForGeo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" 
-        android:text="Enable Geofencing for this location?"/>
+        android:text="@string/enable_geofencing_for_this_location_"/>
 
 </LinearLayout>

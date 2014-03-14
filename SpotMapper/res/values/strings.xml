@@ -9,5 +9,7 @@
     <string name="title_activity_nav_list">NavListActivity</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="add_waypoint">add waypoint</string>
+    <string name="enable_geofencing_for_this_location_">Enable Geofencing for this location?</string>
+    <string name="name_this_location">Name this location</string>
 
 </resources>
