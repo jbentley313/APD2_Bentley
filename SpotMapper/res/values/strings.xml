@@ -12,5 +12,7 @@
     <string name="enable_geofencing_for_this_location_">Enable Geofencing for this location?</string>
     <string name="name_this_location">Name this location</string>
     <string name="save">Save</string>
+    <string name="title_activity_nav_list_fragment">NavListFragment</string>
+    <string name="no_locations_saved">No Locations Saved</string>
 
 </resources>

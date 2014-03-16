@@ -26,6 +26,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.jbentley.spotmapper.LocationDialogFragment.LocationDialogFragmentListener;
 import android.app.ActionBar;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -39,6 +40,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 public class MainNavActivity extends FragmentActivity implements  android.location.LocationListener, LocationDialogFragmentListener{
 	private static final String Tag = "[X][X] MainNavActivity ";
@@ -152,6 +154,7 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 
 			//add location to the database
 			locDb.addLocationtoDB(new LocationInfo(locNameText, latString, longString, isTaggedForGeo));
+			
 		}
 
 		//get all locations to be displayed
@@ -167,6 +170,8 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 
 			Log.i("Location", dispalyLocs);
 		}
+		
+		////
 
 	}
 
