@@ -20,8 +20,9 @@ import com.jbentley.spotmapper.LocationDataBaseHelper;
 
 public class ListNavFragment extends ListFragment  {
 
-
-
+	LocationDataBaseHelper locDb;
+	List<LocationInfo> locs;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -37,11 +38,11 @@ public class ListNavFragment extends ListFragment  {
 
 
 		//get all locations to be displayed
-		LocationDataBaseHelper locDb = new LocationDataBaseHelper(getActivity());
+		 locDb = new LocationDataBaseHelper(getActivity());
 
 
 		//get all locations to be displayed
-		List<LocationInfo> locs = locDb.getAllLocs();  
+		 locs = locDb.getAllLocs();  
 
 		ArrayList<String> allLocInfo = new ArrayList<String>();
 
@@ -76,8 +77,22 @@ public class ListNavFragment extends ListFragment  {
 		// TODO Auto-generated method stub
 		super.onListItemClick(l, v, position, id);
 
-		Log.i("LISTCLICK", String.valueOf(position));
+		Log.i("LISTCLICK", String.valueOf(position + 1));
 		Intent mapNavIntent = new Intent(getActivity(), SavedSpotNavigation.class);
+		
+		
+		LocationInfo mySavedLOC = locDb.getSingleLocation(position + 1);
+		
+		mapNavIntent.putExtra("nameSavedLoc", mySavedLOC.getlocName());
+		mapNavIntent.putExtra("latSavedLoc", mySavedLOC.getlocLatitude());
+		mapNavIntent.putExtra("longSavedLoc", mySavedLOC.getlocLongitude());
+		mapNavIntent.putExtra("geoFenceSavedLoc", mySavedLOC.gettaggedForGeo().booleanValue());
+		mapNavIntent.putExtra("timeSavedLoc", mySavedLOC.getSavedDateTime());
+		
+		
+		
+		Log.i("Extras LNF", mapNavIntent.getExtras().toString());
+		
 		startActivity(mapNavIntent);
 
 	}

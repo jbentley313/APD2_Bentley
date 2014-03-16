@@ -158,7 +158,7 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 
 			//add location to the database
 			locDb.addLocationtoDB(new LocationInfo(locNameText, latString, longString, isTaggedForGeo, savedDateAndTime));
-			
+
 		}
 
 		//get all locations to be displayed
@@ -175,13 +175,13 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 
 			Log.i("Location", dispalyLocs);
 		}
-		
+
 		////
 
 	}
 
 
-	
+
 
 	//on pause remove location updates
 	@Override
@@ -290,11 +290,11 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		}
 
 	}
-	
+
 	private String getCurrentTime() {
 		// TODO Auto-generated method stub
 		SimpleDateFormat dateFormatter = new SimpleDateFormat("EEE  MMM dd, yyyy ' at' h:mm:a", Locale.getDefault());
-        String formattedDate = dateFormatter.format(new Date());
+		String formattedDate = dateFormatter.format(new Date());
 		return formattedDate;
 	}
 
