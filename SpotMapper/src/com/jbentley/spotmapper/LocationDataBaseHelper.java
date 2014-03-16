@@ -12,8 +12,11 @@
  */
 package com.jbentley.spotmapper;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -37,6 +40,7 @@ public class LocationDataBaseHelper extends SQLiteOpenHelper{
 	private static final String LOC_LATITUDE = "location_latitude";
 	private static final String LOC_LONGITUDE = "location_longitude";
 	private static final String LOC_GEOFENCE = "location_geoFence";
+	private static final String LOC_CREATED_AT = "created_at";
 
 	//Location db table create
 	private static final String LOCATION_DATABASE_TABLE_CREATE =
@@ -45,7 +49,8 @@ public class LocationDataBaseHelper extends SQLiteOpenHelper{
 					LOC_NAME + " TEXT, " + 
 					LOC_LATITUDE + " TEXT, " + 
 					LOC_LONGITUDE + " TEXT, " + 
-					LOC_GEOFENCE + " TEXT" + ");";
+					LOC_GEOFENCE + " TEXT, " + 
+					LOC_CREATED_AT + " TEXT" +");";
 
 	public LocationDataBaseHelper(Context context) {
 		// TODO Auto-generated constructor stub
@@ -76,6 +81,9 @@ public class LocationDataBaseHelper extends SQLiteOpenHelper{
 		cValues.put(LOC_LATITUDE, locInfo.getlocLatitude());
 		cValues.put(LOC_LONGITUDE, locInfo.getlocLongitude());
 		cValues.put(LOC_GEOFENCE, locInfo.gettaggedForGeo());
+		cValues.put(LOC_CREATED_AT,  locInfo.getSavedDateTime());
+		
+		
 		
 		//insert location info to db
 		locDb.insert(LOCATION_DATABASE_TABLE_NAME, null, cValues);
@@ -104,6 +112,8 @@ public class LocationDataBaseHelper extends SQLiteOpenHelper{
 	            loc.setlocLatitude(cursor.getString(cursor.getColumnIndex(LOC_LATITUDE)));
 	            loc.setlocLongitude(cursor.getString(cursor.getColumnIndex(LOC_LONGITUDE)));
 	            loc.settaggedForGeo(cursor.getInt(cursor.getColumnIndex(LOC_GEOFENCE))>0);/*get boolean value*/
+	            loc.setSavedDateTime(cursor.getString(cursor.getColumnIndex(LOC_CREATED_AT)));
+	            
 	            
 	            //add location to location list
 	            locList.add(loc);
@@ -115,5 +125,7 @@ public class LocationDataBaseHelper extends SQLiteOpenHelper{
 	 
 	    return locList;
 	}
+	
+	
 	
 }

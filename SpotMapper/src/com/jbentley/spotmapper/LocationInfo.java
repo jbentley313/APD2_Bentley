@@ -12,6 +12,15 @@
  */
 package com.jbentley.spotmapper;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+import android.text.format.DateFormat;
+import android.util.Log;
+
 public class LocationInfo {
 
 	int _id;
@@ -19,6 +28,7 @@ public class LocationInfo {
 	String _locationLatitude;
 	String _locationLongitude;
 	Boolean _taggedForGeo;
+	String _savedDateTime;
 
 
 	public LocationInfo(){
@@ -26,20 +36,24 @@ public class LocationInfo {
 	}
 
 	//constructor for locationInfo
-	public LocationInfo(int id, String locName, String locLatitude, String locLongitude, Boolean taggedForGeo){
+	public LocationInfo(int id, String locName, String locLatitude, String locLongitude, Boolean taggedForGeo, String savedDateTime){
 		this._id = id;
 		this._locationName = locName;
 		this._locationLatitude = locLatitude;
 		this._locationLongitude = locLongitude;
 		this._taggedForGeo = taggedForGeo;
+		this._savedDateTime = savedDateTime;
+
 	}
 
 	//constructor for locationInfo
-	public LocationInfo(String locName, String locLatitude, String locLongitude, Boolean taggedForGeo){
+	public LocationInfo(String locName, String locLatitude, String locLongitude, Boolean taggedForGeo, String savedDateTime){
 		this._locationName = locName;
 		this._locationLatitude = locLatitude;
 		this._locationLongitude = locLongitude;
 		this._taggedForGeo = taggedForGeo;
+		this._savedDateTime = savedDateTime;
+
 	}
 
 	//GETTERS///////////////
@@ -57,15 +71,23 @@ public class LocationInfo {
 	public String getlocLatitude(){
 		return this._locationLatitude;
 	}
-	
+
 	//get location longitude
-		public String getlocLongitude(){
-			return this._locationLongitude;
-		}
+	public String getlocLongitude(){
+		return this._locationLongitude;
+	}
 
 	//get taggedForGeo Boolean
 	public Boolean gettaggedForGeo(){
 		return this._taggedForGeo;
+	}
+
+	//get saved time
+	public String getSavedDateTime(){
+		Log.d("DATETIME", "[X]" + _savedDateTime);
+		 
+		
+		return this._savedDateTime;
 	}
 
 
@@ -84,14 +106,24 @@ public class LocationInfo {
 	public void setlocLatitude(String locLat){
 		this._locationLatitude = locLat;
 	}
-	
+
 	//set location longitude
-		public void setlocLongitude(String locLong){
-			this._locationLongitude = locLong;
-		}
+	public void setlocLongitude(String locLong){
+		this._locationLongitude = locLong;
+	}
 
 	//set taggedForGeo Boolean
 	public void settaggedForGeo(Boolean taggedForGeo){
 		this._taggedForGeo = taggedForGeo;
 	}
+
+	//set date and time
+	public void setSavedDateTime(String dateTime){
+		this._savedDateTime = dateTime;
+	}
+
+	
+
+
+
 }

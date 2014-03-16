@@ -13,7 +13,10 @@
  */
 package com.jbentley.spotmapper;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -148,12 +151,13 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		Double longDouble = myLoc.longitude;
 		String latString = latDouble.toString();
 		String longString = longDouble.toString();
+		String savedDateAndTime = getCurrentTime();
 
 
 		if (!locNameText.isEmpty()) {
 
 			//add location to the database
-			locDb.addLocationtoDB(new LocationInfo(locNameText, latString, longString, isTaggedForGeo));
+			locDb.addLocationtoDB(new LocationInfo(locNameText, latString, longString, isTaggedForGeo, savedDateAndTime));
 			
 		}
 
@@ -166,7 +170,8 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 					" , Location Name: " + locationsaved.getlocName() + 
 					" , Location: Latitude " + locationsaved.getlocLatitude() + 
 					" , Longitude " + locationsaved.getlocLongitude() +
-					" , tagged for geofence: " + locationsaved.gettaggedForGeo();
+					" , tagged for geofence: " + locationsaved.gettaggedForGeo() +
+					", timestamp" + locationsaved.getSavedDateTime();
 
 			Log.i("Location", dispalyLocs);
 		}
@@ -175,6 +180,8 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 
 	}
 
+
+	
 
 	//on pause remove location updates
 	@Override
@@ -283,5 +290,13 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		}
 
 	}
+	
+	private String getCurrentTime() {
+		// TODO Auto-generated method stub
+		SimpleDateFormat dateFormatter = new SimpleDateFormat("EEE  MMM dd, yyyy ' at' h:mm:a", Locale.getDefault());
+        String formattedDate = dateFormatter.format(new Date());
+		return formattedDate;
+	}
+
 
 }
