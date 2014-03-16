@@ -78,7 +78,6 @@ public class ListNavFragment extends ListFragment  {
 
 		Log.i("LISTCLICK", String.valueOf(position));
 		Intent mapNavIntent = new Intent(getActivity(), SavedSpotNavigation.class);
-		startActivity(mapNavIntent);
 
 	}
 
