@@ -48,7 +48,7 @@ public class LocationDataBaseHelper extends SQLiteOpenHelper{
 	//Location db table create
 	private static final String LOCATION_DATABASE_TABLE_CREATE =
 			"CREATE TABLE " + LOCATION_DATABASE_TABLE_NAME + " (" +
-					LOC_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+					LOC_ID + " INTEGER PRIMARY KEY, " +
 					LOC_NAME + " TEXT, " + 
 					LOC_LATITUDE + " TEXT, " + 
 					LOC_LONGITUDE + " TEXT, " + 
