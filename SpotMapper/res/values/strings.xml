@@ -14,5 +14,7 @@
     <string name="save">Save</string>
     <string name="title_activity_nav_list_fragment">NavListFragment</string>
     <string name="no_locations_saved">No Locations Saved</string>
+    <string name="delete_location">delete location</string>
+    <string name="share_location">share location</string>
 
 </resources>

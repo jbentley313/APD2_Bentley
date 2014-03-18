@@ -2,6 +2,8 @@ package com.jbentley.spotmapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import android.app.Activity;
 import android.app.ListFragment;
@@ -11,9 +13,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.jbentley.spotmapper.LocationDataBaseHelper;
@@ -57,10 +61,12 @@ public class ListNavFragment extends ListFragment  {
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
 				android.R.layout.simple_list_item_1, allLocInfo);
 
-
+	
 		this.setListAdapter(adapter);
 
-
+		
+		
+		
 		return view; 
 	}
 
@@ -76,13 +82,14 @@ public class ListNavFragment extends ListFragment  {
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		// TODO Auto-generated method stub
 		super.onListItemClick(l, v, position, id);
-
+		int betterPosition;
+		
 		Log.i("LISTCLICK", String.valueOf(position + 1));
 		Intent mapNavIntent = new Intent(getActivity(), SavedSpotNavigation.class);
 		
 		
 		LocationInfo mySavedLOC = locDb.getSingleLocation(position + 1);
-		
+		mapNavIntent.putExtra("idSavedLoc", mySavedLOC.getId());
 		mapNavIntent.putExtra("nameSavedLoc", mySavedLOC.getlocName());
 		mapNavIntent.putExtra("latSavedLoc", mySavedLOC.getlocLatitude());
 		mapNavIntent.putExtra("longSavedLoc", mySavedLOC.getlocLongitude());
@@ -97,6 +104,11 @@ public class ListNavFragment extends ListFragment  {
 
 	}
 
+	
+public void refreshLIst(){
+	
+	
+}
 
 
 

@@ -12,6 +12,7 @@
  */
 package com.jbentley.spotmapper;
 
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
@@ -92,6 +93,9 @@ public class LocationDialogFragment extends DialogFragment implements OnEditorAc
 			Log.i("DF", "saved btn pressed!");
 
 			((LocationDialogFragmentListener) getActivity()).onFinishNavDialogFrag(nameLocation.getText().toString(), geoCheck.isChecked());
+			
+			
+			
 			this.dismiss();
 		}
 	}

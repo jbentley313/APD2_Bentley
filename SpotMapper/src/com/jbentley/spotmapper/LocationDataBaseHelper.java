@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import android.app.Fragment;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -32,8 +33,8 @@ public class LocationDataBaseHelper extends SQLiteOpenHelper{
 	private static final String LOCATION_DATABASE_NAME = "locationDatabase";
 	private static final String LOCATION_DATABASE_TABLE_NAME = "locations";
 
-	SQLiteDatabase locDb = this.getWritableDatabase();
-	
+	public SQLiteDatabase locDb = this.getWritableDatabase();
+
 	//db column names
 	private static final String LOC_ID = "id";
 	private static final String LOC_NAME = "location_name";
@@ -41,6 +42,8 @@ public class LocationDataBaseHelper extends SQLiteOpenHelper{
 	private static final String LOC_LONGITUDE = "location_longitude";
 	private static final String LOC_GEOFENCE = "location_geoFence";
 	private static final String LOC_CREATED_AT = "created_at";
+
+	private static final String[] COLUMN_NAMES = {LOC_ID,LOC_NAME,LOC_LATITUDE,LOC_LONGITUDE,LOC_GEOFENCE, LOC_CREATED_AT };
 
 	//Location db table create
 	private static final String LOCATION_DATABASE_TABLE_CREATE =
@@ -75,78 +78,112 @@ public class LocationDataBaseHelper extends SQLiteOpenHelper{
 
 	//add location to DB
 	public void addLocationtoDB(LocationInfo locInfo){
-		 
+
 		ContentValues cValues = new ContentValues();
 		cValues.put(LOC_NAME, locInfo.getlocName());
 		cValues.put(LOC_LATITUDE, locInfo.getlocLatitude());
 		cValues.put(LOC_LONGITUDE, locInfo.getlocLongitude());
 		cValues.put(LOC_GEOFENCE, locInfo.gettaggedForGeo());
 		cValues.put(LOC_CREATED_AT,  locInfo.getSavedDateTime());
-		
-		
-		
+
+
+
 		//insert location info to db
 		locDb.insert(LOCATION_DATABASE_TABLE_NAME, null, cValues);
-		
+
+
+
 		Log.i("ADD to DATABASE", cValues.toString());
 		
 		
+		
+		
+		
+		
+		
+		
+		
+		
+
+		locDb.close();
 	}
+
+	//remove location from DB
+	public void deleteLocationFromDB(int locId){
+		locDb.delete(LOCATION_DATABASE_TABLE_NAME, LOC_ID + "=?", new String[] {String.valueOf(locId)});
+		locDb.close();
+	}
+
 
 	//get all locations from DB
 	public List<LocationInfo> getAllLocs() {
-	    List<LocationInfo> locList = new ArrayList<LocationInfo>();
-	    
-	    // Select All Query
-	    String selectAllLocations = "SELECT  * FROM " + LOCATION_DATABASE_TABLE_NAME;
-	 
-	    
-	    Cursor cursor = locDb.rawQuery(selectAllLocations, null);
-	 
-	    //loop thru database and build a list of saved locations
-	    if (cursor.moveToFirst()) {
-	        do {
-	            LocationInfo loc = new LocationInfo();
-	            loc.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(LOC_ID))));
-	            loc.setlocName(cursor.getString(cursor.getColumnIndex(LOC_NAME)));
-	            loc.setlocLatitude(cursor.getString(cursor.getColumnIndex(LOC_LATITUDE)));
-	            loc.setlocLongitude(cursor.getString(cursor.getColumnIndex(LOC_LONGITUDE)));
-	            loc.settaggedForGeo(cursor.getInt(cursor.getColumnIndex(LOC_GEOFENCE))>0);/*get boolean value*/
-	            loc.setSavedDateTime(cursor.getString(cursor.getColumnIndex(LOC_CREATED_AT)));
-	            
-	            
-	            //add location to location list
-	            locList.add(loc);
-	            
-	        } while (cursor.moveToNext());
-	        
-	        cursor.close();
-	    }
-	 
-	    return locList;
-	}
-	
-	// get single loc
-    LocationInfo getSingleLocation(int id) {
-//        SQLiteDatabase db = this.getReadableDatabase();
- 
-        Cursor cursor = locDb.query(LOCATION_DATABASE_TABLE_NAME, new String[] { LOC_ID,
-                LOC_NAME, LOC_LATITUDE, LOC_LONGITUDE, LOC_GEOFENCE, LOC_CREATED_AT }, LOC_ID + "=?",
-                new String[] { String.valueOf(id) }, null, null, null, null);
-        if (cursor != null)
-            cursor.moveToFirst();
- 
-        LocationInfo singleLocation = new LocationInfo(Integer.parseInt(
-        		cursor.getString(cursor.getColumnIndex(LOC_ID))),
-                cursor.getString(cursor.getColumnIndex(LOC_NAME)), 
-                cursor.getString(cursor.getColumnIndex(LOC_LATITUDE)), 
-                cursor.getString(cursor.getColumnIndex(LOC_LONGITUDE)),
-                cursor.getInt(cursor.getColumnIndex(LOC_GEOFENCE))>0,
-                cursor.getString(cursor.getColumnIndex(LOC_CREATED_AT)));
-        
-        return singleLocation;
+		List<LocationInfo> locList = new ArrayList<LocationInfo>();
 
-    }
-	
-	
+		// Select All Query
+		String selectAllLocations = "SELECT  * FROM " + LOCATION_DATABASE_TABLE_NAME;
+
+
+		Cursor cursor = locDb.rawQuery(selectAllLocations, null);
+
+		int cursorCount = cursor.getCount();
+		String cursorCountstring = String.valueOf(cursorCount);
+		Log.d("CC", cursorCountstring);
+			//loop thru database and build a list of saved locations
+			if ((cursor != null) && (cursor.getCount()!=0) && (cursor.moveToFirst())) {
+				do {
+					
+					LocationInfo loc = new LocationInfo();
+					loc.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(LOC_ID))));
+					loc.setlocName(cursor.getString(cursor.getColumnIndex(LOC_NAME)));
+					loc.setlocLatitude(cursor.getString(cursor.getColumnIndex(LOC_LATITUDE)));
+					loc.setlocLongitude(cursor.getString(cursor.getColumnIndex(LOC_LONGITUDE)));
+					loc.settaggedForGeo(cursor.getInt(cursor.getColumnIndex(LOC_GEOFENCE))>0);/*get boolean value*/
+					loc.setSavedDateTime(cursor.getString(cursor.getColumnIndex(LOC_CREATED_AT)));
+
+
+					//add location to location list
+					locList.add(loc);
+					
+
+				} while (cursor.moveToNext());
+
+
+				cursor.close();
+				
+			}
+			
+		
+		
+		return locList;
+	}
+
+
+	// get single loc
+	LocationInfo getSingleLocation(int id) {
+
+		Cursor cursor = locDb.query(LOCATION_DATABASE_TABLE_NAME, //table
+				COLUMN_NAMES, //columnames
+				LOC_ID + "=?", //selections
+				new String[] { String.valueOf(id) }, //selection args
+				null, // group by
+				null, //having
+				null, //order by
+				null); //limit
+		if (cursor != null)
+			cursor.moveToFirst();
+
+		LocationInfo singleLocation = new LocationInfo(Integer.parseInt(
+				cursor.getString(cursor.getColumnIndex(LOC_ID))),
+				cursor.getString(cursor.getColumnIndex(LOC_NAME)), 
+				cursor.getString(cursor.getColumnIndex(LOC_LATITUDE)), 
+				cursor.getString(cursor.getColumnIndex(LOC_LONGITUDE)),
+				cursor.getInt(cursor.getColumnIndex(LOC_GEOFENCE))>0,
+				cursor.getString(cursor.getColumnIndex(LOC_CREATED_AT)));
+
+		return singleLocation;
+
+	}
+
+
+
 }

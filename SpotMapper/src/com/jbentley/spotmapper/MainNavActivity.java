@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import com.google.android.gms.internal.db;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
@@ -30,6 +31,8 @@ import com.jbentley.spotmapper.LocationDialogFragment.LocationDialogFragmentList
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.app.ListFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -39,16 +42,22 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.ListViewAutoScrollHelper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 public class MainNavActivity extends FragmentActivity implements  android.location.LocationListener, LocationDialogFragmentListener{
 	private static final String Tag = "[X][X] MainNavActivity ";
 	MenuItem settingsIcon;
 	MenuItem addNavIcon;
+
 	MapView map;
 	private GoogleMap mMap;
 	LocationManager locationManager;
@@ -83,8 +92,10 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		addNavIcon = menu.findItem(R.id.addNavIcon).setVisible(false);
 
 
+		
+		
 
-		return super.onCreateOptionsMenu(menu);
+		return true;
 
 	}
 
@@ -155,33 +166,29 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 
 
 		if (!locNameText.isEmpty()) {
-
+Log.i("NO", "not empty");
 			//add location to the database
 			locDb.addLocationtoDB(new LocationInfo(locNameText, latString, longString, isTaggedForGeo, savedDateAndTime));
-
+			
+			
+//			Fragment lnf = getFragmentManager().findFragmentById(R.id.listNavFrag);
+//			ArrayAdapter<String> la = (ArrayAdapter<String>) ((ListFragment) lnf).getListView().getAdapter();
+//			la.notifyDataSetChanged();
+			LocationDataBaseHelper locDb2 = new LocationDataBaseHelper(this);
+			
+			 List<LocationInfo> contacts = locDb2.getAllLocs();       
+	         
+		        for (LocationInfo loc : contacts) {
+		            String log = "Id: "+loc.getId()+" ,Name: " + loc.getlocName();
+		                
+		        Log.d("Log: ", log);
+		    }
+				
 		}
-
-		//get all locations to be displayed
-		List<LocationInfo> locs = locDb.getAllLocs();       
-
-		//loop thru db to log each entry
-		for (LocationInfo locationsaved : locs) {
-			String dispalyLocs = "id: "+locationsaved.getId()+
-					" , Location Name: " + locationsaved.getlocName() + 
-					" , Location: Latitude " + locationsaved.getlocLatitude() + 
-					" , Longitude " + locationsaved.getlocLongitude() +
-					" , tagged for geofence: " + locationsaved.gettaggedForGeo() +
-					", timestamp" + locationsaved.getSavedDateTime();
-
-			Log.i("Location", dispalyLocs);
-		}
-
-		////
+		
+       
 
 	}
-
-
-
 
 	//on pause remove location updates
 	@Override
