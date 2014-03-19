@@ -43,7 +43,7 @@ public class LocationDataBaseHelper extends SQLiteOpenHelper{
 	private static final String LOC_GEOFENCE = "location_geoFence";
 	private static final String LOC_CREATED_AT = "created_at";
 
-	private static final String[] COLUMN_NAMES = {LOC_ID,LOC_NAME,LOC_LATITUDE,LOC_LONGITUDE,LOC_GEOFENCE, LOC_CREATED_AT };
+	public static final String[] COLUMN_NAMES = {LOC_ID,LOC_NAME,LOC_LATITUDE,LOC_LONGITUDE,LOC_GEOFENCE, LOC_CREATED_AT };
 
 	//Location db table create
 	private static final String LOCATION_DATABASE_TABLE_CREATE =

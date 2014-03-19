@@ -79,6 +79,8 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		//start location listen
 		startLocationListen();
 
+
+
 	}
 
 
@@ -92,8 +94,8 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		addNavIcon = menu.findItem(R.id.addNavIcon).setVisible(false);
 
 
-		
-		
+
+
 
 		return true;
 
@@ -166,27 +168,33 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 
 
 		if (!locNameText.isEmpty()) {
-Log.i("NO", "not empty");
+			Log.i("NO", "not empty");
 			//add location to the database
 			locDb.addLocationtoDB(new LocationInfo(locNameText, latString, longString, isTaggedForGeo, savedDateAndTime));
+
+
+			ListNavFragment lnf = (ListNavFragment) getFragmentManager().findFragmentById(R.id.listNavFrag);
+			ListView lf = lnf.getListView();
+			lnf.init(getCurrentFocus());
+			ArrayAdapter<?> mad = (ArrayAdapter<?>) lf.getAdapter();
+			mad.clear();
+			mad.notifyDataSetChanged();
+			lnf.init(lf);
+
 			
-			
-//			Fragment lnf = getFragmentManager().findFragmentById(R.id.listNavFrag);
-//			ArrayAdapter<String> la = (ArrayAdapter<String>) ((ListFragment) lnf).getListView().getAdapter();
-//			la.notifyDataSetChanged();
 			LocationDataBaseHelper locDb2 = new LocationDataBaseHelper(this);
-			
-			 List<LocationInfo> contacts = locDb2.getAllLocs();       
-	         
-		        for (LocationInfo loc : contacts) {
-		            String log = "Id: "+loc.getId()+" ,Name: " + loc.getlocName();
-		                
-		        Log.d("Log: ", log);
-		    }
-				
+
+			List<LocationInfo> contacts = locDb2.getAllLocs();       
+
+			for (LocationInfo loc : contacts) {
+				String log = "Id: "+loc.getId()+" ,Name: " + loc.getlocName();
+
+				Log.d("Log: ", log);
+			}
+
 		}
-		
-       
+
+
 
 	}
 

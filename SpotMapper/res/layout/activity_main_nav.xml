@@ -13,11 +13,11 @@
         android:layout_height="0dp"
         android:layout_weight="55" />
 
-    <fragment 
+    <fragment
         android:id="@+id/listNavFrag"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="45"
-        class = "com.jbentley.spotmapper.ListNavFragment" />
+        class="com.jbentley.spotmapper.ListNavFragment" />
 
 </LinearLayout>

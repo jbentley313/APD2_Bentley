@@ -7,7 +7,9 @@ import java.util.Observer;
 
 import android.app.Activity;
 import android.app.ListFragment;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,27 +28,38 @@ public class ListNavFragment extends ListFragment  {
 
 	LocationDataBaseHelper locDb;
 	List<LocationInfo> locs;
-	
+	Cursor myCursor;
+
+	ListView myListView;
+	private static final String LOCATION_DATABASE_TABLE_NAME = "locations";
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		Log.i("LISTFRAG", "hello!");
 		// TODO Auto-generated method stub
-		View view = inflater.inflate(R.layout.list_nav_frag, container, false);
-		//		ListFragment.setListAdapter(null);
-		ListView listView = (ListView) view.findViewById(android.R.id.list);
-		TextView noSavedLocsText = (TextView) view.findViewById(android.R.id.empty);
+		View view = inflater.inflate(R.layout.list_nav_frag, container, true);
 
 
 
 
+		init(view);
+
+
+		return view;
+
+
+	}
+
+	public void init(View view) {
+		// TODO Auto-generated method stub
+		Log.i("[X][X]", "INIT!!!!!");
 
 		//get all locations to be displayed
-		 locDb = new LocationDataBaseHelper(getActivity());
+		locDb = new LocationDataBaseHelper(getActivity());
 
+		locs = locDb.getAllLocs();
 
-		//get all locations to be displayed
-		 locs = locDb.getAllLocs();  
 
 		ArrayList<String> allLocInfo = new ArrayList<String>();
 
@@ -57,17 +70,14 @@ public class ListNavFragment extends ListFragment  {
 					locationsaved.getSavedDateTime());
 		}
 
-
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
 				android.R.layout.simple_list_item_1, allLocInfo);
 
-	
-		this.setListAdapter(adapter);
 
-		
-		
-		
-		return view; 
+		setListAdapter(adapter);
+
+
+
 	}
 
 	@Override
@@ -82,12 +92,12 @@ public class ListNavFragment extends ListFragment  {
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		// TODO Auto-generated method stub
 		super.onListItemClick(l, v, position, id);
-		int betterPosition;
-		
+
+
 		Log.i("LISTCLICK", String.valueOf(position + 1));
 		Intent mapNavIntent = new Intent(getActivity(), SavedSpotNavigation.class);
-		
-		
+
+
 		LocationInfo mySavedLOC = locDb.getSingleLocation(position + 1);
 		mapNavIntent.putExtra("idSavedLoc", mySavedLOC.getId());
 		mapNavIntent.putExtra("nameSavedLoc", mySavedLOC.getlocName());
@@ -95,20 +105,20 @@ public class ListNavFragment extends ListFragment  {
 		mapNavIntent.putExtra("longSavedLoc", mySavedLOC.getlocLongitude());
 		mapNavIntent.putExtra("geoFenceSavedLoc", mySavedLOC.gettaggedForGeo().booleanValue());
 		mapNavIntent.putExtra("timeSavedLoc", mySavedLOC.getSavedDateTime());
-		
-		
-		
+
+
+
 		Log.i("Extras LNF", mapNavIntent.getExtras().toString());
-		
+
 		startActivity(mapNavIntent);
 
 	}
 
-	
-public void refreshLIst(){
-	
-	
-}
+
+	public void refreshLIst(){
+
+
+	}
 
 
 
