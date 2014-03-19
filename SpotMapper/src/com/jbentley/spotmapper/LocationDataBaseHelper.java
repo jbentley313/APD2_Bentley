@@ -75,7 +75,6 @@ public class LocationDataBaseHelper extends SQLiteOpenHelper{
 		onCreate(db);
 	}
 
-
 	//add location to DB
 	public void addLocationtoDB(LocationInfo locInfo){
 
@@ -86,25 +85,11 @@ public class LocationDataBaseHelper extends SQLiteOpenHelper{
 		cValues.put(LOC_GEOFENCE, locInfo.gettaggedForGeo());
 		cValues.put(LOC_CREATED_AT,  locInfo.getSavedDateTime());
 
-
-
 		//insert location info to db
 		locDb.insert(LOCATION_DATABASE_TABLE_NAME, null, cValues);
 
-
-
 		Log.i("ADD to DATABASE", cValues.toString());
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-
 		locDb.close();
 	}
 
@@ -114,14 +99,12 @@ public class LocationDataBaseHelper extends SQLiteOpenHelper{
 		locDb.close();
 	}
 
-
 	//get all locations from DB
 	public List<LocationInfo> getAllLocs() {
 		List<LocationInfo> locList = new ArrayList<LocationInfo>();
 
 		// Select All Query
 		String selectAllLocations = "SELECT  * FROM " + LOCATION_DATABASE_TABLE_NAME;
-
 
 		Cursor cursor = locDb.rawQuery(selectAllLocations, null);
 
@@ -140,31 +123,29 @@ public class LocationDataBaseHelper extends SQLiteOpenHelper{
 					loc.settaggedForGeo(cursor.getInt(cursor.getColumnIndex(LOC_GEOFENCE))>0);/*get boolean value*/
 					loc.setSavedDateTime(cursor.getString(cursor.getColumnIndex(LOC_CREATED_AT)));
 
-
 					//add location to location list
 					locList.add(loc);
 					
-
 				} while (cursor.moveToNext());
-
 
 				cursor.close();
 				
 			}
 			
-		
-		
 		return locList;
 	}
 
-
+	
+	
+	
+	
 	// get single loc
-	LocationInfo getSingleLocation(int id) {
+	LocationInfo getSingleLocation(String locName, String createdAt) {
 
 		Cursor cursor = locDb.query(LOCATION_DATABASE_TABLE_NAME, //table
 				COLUMN_NAMES, //columnames
-				LOC_ID + "=?", //selections
-				new String[] { String.valueOf(id) }, //selection args
+				LOC_NAME + " =?" + " AND " + LOC_CREATED_AT + " =?", //selections
+				new String[] { String.valueOf(locName), String.valueOf(createdAt) }, //selection args
 				null, // group by
 				null, //having
 				null, //order by
@@ -183,7 +164,4 @@ public class LocationDataBaseHelper extends SQLiteOpenHelper{
 		return singleLocation;
 
 	}
-
-
-
 }

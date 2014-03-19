@@ -14,7 +14,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.hardware.Sensor;
@@ -24,12 +27,16 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
-public class SavedSpotNavigation extends Activity implements android.location.LocationListener, SensorEventListener{
+public class SavedSpotNavigation extends FragmentActivity implements android.location.LocationListener, SensorEventListener{
 	MapView mapS;
 	private GoogleMap mMapS;
 	private LocationManager locationManagerS;
@@ -46,7 +53,8 @@ public class SavedSpotNavigation extends Activity implements android.location.Lo
 	MenuItem share;
 	MenuItem delete;
 	private static String Tag = "SavedSpotNavigationActivity";
-
+	
+	
 	Sensor magnomtr;
 	private float bearingFlt;
 
@@ -157,7 +165,7 @@ public class SavedSpotNavigation extends Activity implements android.location.Lo
 		delete = (MenuItem) findViewById(R.id.deleteIcon);
 
 
-		return super.onCreateOptionsMenu(menu);
+		return true;
 	}
 
 
@@ -172,9 +180,11 @@ public class SavedSpotNavigation extends Activity implements android.location.Lo
 
 		if(itemId == R.id.deleteIcon) {
 			Log.i(Tag, "delete icon");
-			LocationDataBaseHelper dbhelp = new LocationDataBaseHelper(getApplicationContext());
-//			int deleteInt = Integer.parseInt(idLoc);
-			dbhelp.deleteLocationFromDB(idLoc);
+			
+			
+			deleteLocaton();
+			
+			
 			
 			
 		} else if(itemId == R.id.shareIcon) {
@@ -184,19 +194,56 @@ public class SavedSpotNavigation extends Activity implements android.location.Lo
 			
 			Intent shareIntent = new Intent();
 			shareIntent.setAction(Intent.ACTION_SEND);
-			shareIntent.putExtra(Intent.EXTRA_SUBJECT, "subject");
+			shareIntent.putExtra(Intent.EXTRA_SUBJECT, "See the location I shared with you on Spot Mapper!");
 			shareIntent.putExtra(Intent.EXTRA_TEXT, "I'm sharing the location of " + "\"" + nameLoc + "\"" + " via Spot Mapper!" + "\n" +
 			linkToMySavedLoc);
 			shareIntent.setType("text/plain");
 			startActivity(shareIntent);
 		}
 
-
-
-
-
-
 		return true;
+	}
+
+
+
+
+
+	private void deleteLocaton() {
+		
+		new AlertDialog.Builder(this)
+
+		.setTitle("Delete location " + "\"" + nameLoc + "\" ?")
+		.setMessage("This cannot be undone!")
+		.setPositiveButton("Delete", new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				LocationDataBaseHelper dbhelp = new LocationDataBaseHelper(getApplicationContext());	
+				dbhelp.deleteLocationFromDB(idLoc);
+				
+				finish();
+			}
+		})
+		
+		.setCancelable(true)
+		.setNegativeButton("Cancel", null)
+		.show();
+		
+
+		
+		
+		
+		
+	}
+
+
+
+
+
+	private void refreshListViewAdapter() {
+		
+		
 	}
 
 
@@ -277,6 +324,7 @@ public class SavedSpotNavigation extends Activity implements android.location.Lo
 		if (sensorMngr != null) {
 			sensorMngr.unregisterListener(this);
 		}
+		
 	}
 
 

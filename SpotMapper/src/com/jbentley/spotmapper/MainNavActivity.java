@@ -59,7 +59,7 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 	MenuItem addNavIcon;
 
 	MapView map;
-	private GoogleMap mMap;
+	 GoogleMap mMap;
 	LocationManager locationManager;
 	LatLng myLoc;
 
@@ -175,46 +175,31 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 
 			//get listNavFrag
 			ListNavFragment lnf = (ListNavFragment) getFragmentManager().findFragmentById(R.id.listNavFrag);
-			
+
 			//get listview from listnavfrag
 			ListView lv = lnf.getListView();
-			
+
 			//get arrayadapter from the listview in listnavfrag
 			ArrayAdapter<?> myArrAdptr = (ArrayAdapter<?>) lv.getAdapter();
-			
+
 			//notify the adapter data has changed
 			myArrAdptr.notifyDataSetChanged();
-			
+
 			//call init on listnavfrag
 			lnf.init(lv);
 
-			
-			LocationDataBaseHelper locDb2 = new LocationDataBaseHelper(this);
-
-			List<LocationInfo> contacts = locDb2.getAllLocs();       
-
-			for (LocationInfo loc : contacts) {
-				String log = "Id: "+loc.getId()+" ,Name: " + loc.getlocName();
-
-				Log.d("Log: ", log);
-			}
-
 		}
-
-
 
 	}
 
 	//on pause remove location updates
 	@Override
 	protected void onPause() {
+		super.onPause();
 
 		Log.i(Tag, "onPause");
 		locationManager.removeUpdates(this);
-
-		super.onPause();
 	}
-
 
 	//onLocationChanged
 	@Override
@@ -277,6 +262,23 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		super.onResume();
 
 		startLocationListen();
+		
+		mMap.clear();
+		
+		//get listNavFrag
+		ListNavFragment lnf = (ListNavFragment) getFragmentManager().findFragmentById(R.id.listNavFrag);
+
+		//get listview from listnavfrag
+		ListView lv = lnf.getListView();
+
+		//get arrayadapter from the listview in listnavfrag
+		ArrayAdapter<?> myArrAdptr = (ArrayAdapter<?>) lv.getAdapter();
+
+		//notify the adapter data has changed
+		myArrAdptr.notifyDataSetChanged();
+
+		//call init on listnavfrag
+		lnf.init(lv);
 
 	}
 

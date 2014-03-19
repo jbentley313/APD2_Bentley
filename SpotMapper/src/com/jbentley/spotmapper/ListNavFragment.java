@@ -40,14 +40,9 @@ public class ListNavFragment extends ListFragment  {
 		// TODO Auto-generated method stub
 		View view = inflater.inflate(R.layout.list_nav_frag, container, true);
 
-
-
-
 		init(view);
 
-
 		return view;
-
 
 	}
 
@@ -76,8 +71,6 @@ public class ListNavFragment extends ListFragment  {
 
 		setListAdapter(adapter);
 
-
-
 	}
 
 	@Override
@@ -93,12 +86,17 @@ public class ListNavFragment extends ListFragment  {
 		// TODO Auto-generated method stub
 		super.onListItemClick(l, v, position, id);
 
-
 		Log.i("LISTCLICK", String.valueOf(position + 1));
 		Intent mapNavIntent = new Intent(getActivity(), SavedSpotNavigation.class);
-
-
-		LocationInfo mySavedLOC = locDb.getSingleLocation(position + 1);
+		String locName = l.getItemAtPosition(position).toString();
+		
+		String[] splitString1 = locName.split("\\n");
+		Log.i("APlit", splitString1[0]);
+		
+		String locationName = splitString1[0];
+		String locationSaved = splitString1[1];
+	
+		LocationInfo mySavedLOC = locDb.getSingleLocation(locationName, locationSaved);
 		mapNavIntent.putExtra("idSavedLoc", mySavedLOC.getId());
 		mapNavIntent.putExtra("nameSavedLoc", mySavedLOC.getlocName());
 		mapNavIntent.putExtra("latSavedLoc", mySavedLOC.getlocLatitude());
@@ -106,20 +104,10 @@ public class ListNavFragment extends ListFragment  {
 		mapNavIntent.putExtra("geoFenceSavedLoc", mySavedLOC.gettaggedForGeo().booleanValue());
 		mapNavIntent.putExtra("timeSavedLoc", mySavedLOC.getSavedDateTime());
 
-
-
 		Log.i("Extras LNF", mapNavIntent.getExtras().toString());
 
 		startActivity(mapNavIntent);
-
 	}
-
-
-	public void refreshLIst(){
-
-
-	}
-
 
 
 }
