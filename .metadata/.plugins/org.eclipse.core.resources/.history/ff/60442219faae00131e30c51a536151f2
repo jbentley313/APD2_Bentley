@@ -173,20 +173,13 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 			locDb.addLocationtoDB(new LocationInfo(locNameText, latString, longString, isTaggedForGeo, savedDateAndTime));
 
 
-			//get listNavFrag
 			ListNavFragment lnf = (ListNavFragment) getFragmentManager().findFragmentById(R.id.listNavFrag);
-			
-			//get listview from listnavfrag
-			ListView lv = lnf.getListView();
-			
-			//get arrayadapter from the listview in listnavfrag
-			ArrayAdapter<?> myArrAdptr = (ArrayAdapter<?>) lv.getAdapter();
-			
-			//notify the adapter data has changed
-			myArrAdptr.notifyDataSetChanged();
-			
-			//call init on listnavfrag
-			lnf.init(lv);
+			ListView lf = lnf.getListView();
+			lnf.init(getCurrentFocus());
+			ArrayAdapter<?> mad = (ArrayAdapter<?>) lf.getAdapter();
+			mad.clear();
+			mad.notifyDataSetChanged();
+			lnf.init(lf);
 
 			
 			LocationDataBaseHelper locDb2 = new LocationDataBaseHelper(this);

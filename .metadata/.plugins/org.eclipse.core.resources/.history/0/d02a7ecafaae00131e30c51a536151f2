@@ -179,8 +179,14 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 			//get listview from listnavfrag
 			ListView lv = lnf.getListView();
 			
+			//call init on listnavfrag
+//			lnf.init(getCurrentFocus());
+			
 			//get arrayadapter from the listview in listnavfrag
 			ArrayAdapter<?> myArrAdptr = (ArrayAdapter<?>) lv.getAdapter();
+			
+			//clear the adapter
+			myArrAdptr.clear();
 			
 			//notify the adapter data has changed
 			myArrAdptr.notifyDataSetChanged();
