@@ -1,25 +1,22 @@
 package com.jbentley.spotmapper;
 
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -32,9 +29,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 public class SavedSpotNavigation extends FragmentActivity implements android.location.LocationListener, SensorEventListener{
 	MapView mapS;
@@ -52,9 +46,10 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 	private SensorManager sensorMngr;
 	MenuItem share;
 	MenuItem delete;
+	MenuItem compass;
 	private static String Tag = "SavedSpotNavigationActivity";
-	
-	
+
+
 	Sensor magnomtr;
 	private float bearingFlt;
 
@@ -118,8 +113,8 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 			geoDisplay = "Not tagged for Geofence";
 		}
 
-
-
+		//set action bar title to saved location name
+		setTitle(nameLoc);
 
 
 
@@ -132,8 +127,13 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 
 			//google map options
 			GoogleMapOptions mapOptions = new GoogleMapOptions();
-			mapOptions.mapType(GoogleMap.MAP_TYPE_NORMAL)
-			.compassEnabled(true);
+			mapOptions.mapType(GoogleMap.MAP_TYPE_NORMAL);
+
+			mapOptions.compassEnabled(true);
+
+			UiSettings uiSettings = mMapS.getUiSettings();
+			uiSettings.setCompassEnabled(true);
+
 
 			//add map marker
 			Marker savedLocMarker = mMapS.addMarker(new MarkerOptions()
@@ -163,6 +163,7 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 
 		share = (MenuItem) findViewById(R.id.shareIcon);
 		delete = (MenuItem) findViewById(R.id.deleteIcon);
+		compass = (MenuItem) findViewById(R.id.compassIcon);
 
 
 		return true;
@@ -178,81 +179,61 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 
 		int itemId = item.getItemId();
 
+		//delete icon pressed
 		if(itemId == R.id.deleteIcon) {
-			Log.i(Tag, "delete icon");
-			
-			
+			Log.i(Tag, "delete icon clicked");
+
+
 			deleteLocaton();
-			
-			
-			
-			
+
+			//share location
 		} else if(itemId == R.id.shareIcon) {
-			Log.i(Tag, "share icon");
-			
+			Log.i(Tag, "share icon clicked");
+
 			String linkToMySavedLoc = "http://maps.google.com/maps?q=loc:" + mySavedLoc.latitude + "," + mySavedLoc.longitude;
-			
+
 			Intent shareIntent = new Intent();
 			shareIntent.setAction(Intent.ACTION_SEND);
 			shareIntent.putExtra(Intent.EXTRA_SUBJECT, "See the location I shared with you on Spot Mapper!");
 			shareIntent.putExtra(Intent.EXTRA_TEXT, "I'm sharing the location of " + "\"" + nameLoc + "\"" + " via Spot Mapper!" + "\n" +
-			linkToMySavedLoc);
+					linkToMySavedLoc);
 			shareIntent.setType("text/plain");
 			startActivity(shareIntent);
+		} else if(itemId == R.id.compassIcon) {
+			Log.i (Tag, "compass icon clicked");
 		}
 
 		return true;
 	}
 
-
-
-
-
+	// delete saved location from the database
 	private void deleteLocaton() {
-		
+
 		new AlertDialog.Builder(this)
 
 		.setTitle("Delete location " + "\"" + nameLoc + "\" ?")
 		.setMessage("This cannot be undone!")
 		.setPositiveButton("Delete", new OnClickListener() {
-			
+
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
 				LocationDataBaseHelper dbhelp = new LocationDataBaseHelper(getApplicationContext());	
 				dbhelp.deleteLocationFromDB(idLoc);
-				
+
 				finish();
 			}
 		})
-		
+
 		.setCancelable(true)
 		.setNegativeButton("Cancel", null)
 		.show();
-		
-
-		
-		
-		
-		
 	}
 
 
 
-
-
-	private void refreshListViewAdapter() {
-		
-		
-	}
-
-
-
-
-
+	//position camera behind current location pointing towards target location
 	public void updateCameraforCompassBearing(float bearing) {
-
-
 
 		CameraPosition camPos = new CameraPosition.Builder()
 		.target(myCurrentLatLng)
@@ -264,14 +245,10 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 
 	}
 
-
-
 	@Override
 	public void onLocationChanged(Location location) {
 
 	}
-
-
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -279,24 +256,17 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 
 	}
 
-
-
 	@Override
 	public void onProviderEnabled(String provider) {
 		// TODO Auto-generated method stub
 
 	}
 
-
-
 	@Override
 	public void onProviderDisabled(String provider) {
 		// TODO Auto-generated method stub
 
 	}
-
-
-
 
 
 	@Override
@@ -307,10 +277,6 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 
 
 	}
-
-
-
-
 
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -324,11 +290,5 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 		if (sensorMngr != null) {
 			sensorMngr.unregisterListener(this);
 		}
-		
 	}
-
-
-
-
-
 }
