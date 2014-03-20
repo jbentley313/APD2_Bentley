@@ -11,14 +11,6 @@
  * LocationInfo is a custom Java object to help with saving and reading location objects (LocationInfo)
  */
 package com.jbentley.spotmapper;
-
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
-import android.text.format.DateFormat;
 import android.util.Log;
 
 public class LocationInfo {

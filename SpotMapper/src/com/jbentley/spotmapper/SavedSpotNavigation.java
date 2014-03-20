@@ -35,23 +35,22 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 	private GoogleMap mMapS;
 	private LocationManager locationManagerS;
 	private LatLng mySavedLoc;
-	private Location myCurrentLocation;
-	private LatLng myCurrentLatLng;
 	private String nameLoc;
 	private String latLoc;
 	private String longLoc;
 	private int idLoc;
 	private Boolean geoFenceLoc;
-	private String timeLoc;
 	private SensorManager sensorMngr;
-	MenuItem share;
-	MenuItem delete;
 	MenuItem compass;
 	private static String Tag = "SavedSpotNavigationActivity";
+	LatLng myCLatLng;
+	float targetBearing;
+	Boolean changeCamera;
 
 
 	Sensor magnomtr;
-	private float bearingFlt;
+	Sensor accel;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,23 +62,12 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayShowHomeEnabled(true);
 
-
+		//change camera tilt and bearing flag
+		changeCamera =false;
 
 		locationManagerS = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
 		locationManagerS.requestLocationUpdates(LocationManager.GPS_PROVIDER,  3000 /*5 seconds*/  , 0, this);
-
-		sensorMngr = (SensorManager) getSystemService(SENSOR_SERVICE);
-
-		magnomtr = sensorMngr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-
-		if(sensorMngr !=null){
-
-			sensorMngr.registerListener(this, magnomtr, SensorManager.SENSOR_DELAY_UI);
-		}
-
-
-
 
 		//get extras passed from MainNavActivity
 		Bundle extras = getIntent().getExtras();
@@ -88,10 +76,9 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 		latLoc = extras.getString("latSavedLoc");
 		longLoc = extras.getString("longSavedLoc");
 		geoFenceLoc = extras.getBoolean("geoFenceSavedLoc");
-		timeLoc = extras.getString("timeSavedLoc");
+		extras.getString("timeSavedLoc");
 
 		//convert lat and long strings to long for use with LatLng
-
 		Double latFromString;
 		Double longFromString; 
 
@@ -115,8 +102,6 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 
 		//set action bar title to saved location name
 		setTitle(nameLoc);
-
-
 
 		//get the map fragment 
 		mMapS = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
@@ -151,9 +136,6 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 	}
 
 
-
-
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// TODO Auto-generated method stub
@@ -161,16 +143,8 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.saved_spot_action_bar, menu);
 
-		share = (MenuItem) findViewById(R.id.shareIcon);
-		delete = (MenuItem) findViewById(R.id.deleteIcon);
-		compass = (MenuItem) findViewById(R.id.compassIcon);
-
-
 		return true;
 	}
-
-
-
 
 
 	@Override
@@ -190,6 +164,7 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 		} else if(itemId == R.id.shareIcon) {
 			Log.i(Tag, "share icon clicked");
 
+			//map location coordinates string
 			String linkToMySavedLoc = "http://maps.google.com/maps?q=loc:" + mySavedLoc.latitude + "," + mySavedLoc.longitude;
 
 			Intent shareIntent = new Intent();
@@ -199,8 +174,14 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 					linkToMySavedLoc);
 			shareIntent.setType("text/plain");
 			startActivity(shareIntent);
+
+			//compass icon
 		} else if(itemId == R.id.compassIcon) {
 			Log.i (Tag, "compass icon clicked");
+
+
+			changeCamera = true;
+
 		}
 
 		return true;
@@ -209,6 +190,7 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 	// delete saved location from the database
 	private void deleteLocaton() {
 
+		//alert for confirmation of delete
 		new AlertDialog.Builder(this)
 
 		.setTitle("Delete location " + "\"" + nameLoc + "\" ?")
@@ -231,24 +213,33 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 	}
 
 
-
-	//position camera behind current location pointing towards target location
-	public void updateCameraforCompassBearing(float bearing) {
-
-		CameraPosition camPos = new CameraPosition.Builder()
-		.target(myCurrentLatLng)
-		.bearing(bearing)
-		.tilt(60.0f)
-		.zoom(19f)
-		.build();
-		mMapS.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
-
-	}
-
 	@Override
 	public void onLocationChanged(Location location) {
-
+		
+		if (changeCamera) {
+		myCLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+		Location bearingSavedLoc = new Location("newloc");
+		bearingSavedLoc.setLatitude(mySavedLoc.latitude);
+		bearingSavedLoc.setLongitude(mySavedLoc.longitude);
+		targetBearing = location.bearingTo(bearingSavedLoc);
+		updateCameraforCompassBearing(targetBearing);
+		Log.i(Tag, String.valueOf(targetBearing));
+		}
 	}
+	
+	//position camera behind current location pointing towards target location
+		public void updateCameraforCompassBearing(float bearing) {
+
+			CameraPosition camPos = new CameraPosition.Builder()
+			.target(myCLatLng)
+			.bearing(bearing)
+			
+			.tilt(80.0f)
+			.zoom(mMapS.getCameraPosition().zoom)
+			.build();
+			mMapS.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
+
+		}
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -272,8 +263,6 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		// TODO Auto-generated method stub
-		//		float[] gravitys = event.values;
-		//		Log.i("CH", String.valueOf(gravitys[0]));
 
 
 	}
@@ -290,5 +279,6 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 		if (sensorMngr != null) {
 			sensorMngr.unregisterListener(this);
 		}
+		changeCamera = false;
 	}
 }
