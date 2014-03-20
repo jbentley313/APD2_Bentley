@@ -10,11 +10,8 @@
 <fullyQualifiedTypeName name="android.widget.AdapterView.OnItemClickListener"/>
 <fullyQualifiedTypeName name="android.widget.AutoCompleteTextView.Validator"/>
 <fullyQualifiedTypeName name="com.google.android.gms.location.LocationListener"/>
-<fullyQualifiedTypeName name="com.google.android.gms.maps.model.CameraPosition"/>
 <fullyQualifiedTypeName name="com.jbentley.spotmapper.SavedSpotNavigation"/>
 <fullyQualifiedTypeName name="android.location.LocationListener"/>
-<fullyQualifiedTypeName name="android.location.LocationManager"/>
-<fullyQualifiedTypeName name="com.google.android.gms.maps.model.LatLng"/>
 <fullyQualifiedTypeName name="android.hardware.SensorEventListener"/>
 <fullyQualifiedTypeName name="android.hardware.Sensor"/>
 <fullyQualifiedTypeName name="android.app.FragmentTransaction"/>
@@ -27,7 +24,6 @@
 <fullyQualifiedTypeName name="com.jbentley.spotmapper.R.menu"/>
 <fullyQualifiedTypeName name="java.net.URL"/>
 <fullyQualifiedTypeName name="android.database.sqlite.SQLiteDatabase"/>
-<fullyQualifiedTypeName name="android.location.Location"/>
 <fullyQualifiedTypeName name="java.lang.Integer"/>
 <fullyQualifiedTypeName name="android.widget.ListView"/>
 <fullyQualifiedTypeName name="android.widget.CursorAdapter"/>
@@ -60,4 +56,8 @@
 <fullyQualifiedTypeName name="android.view.MenuItem"/>
 <fullyQualifiedTypeName name="com.jbentley.spotmapper.R.id"/>
 <fullyQualifiedTypeName name="android.hardware.SensorManager"/>
+<fullyQualifiedTypeName name="android.location.Location"/>
+<fullyQualifiedTypeName name="com.google.android.gms.maps.model.LatLng"/>
+<fullyQualifiedTypeName name="android.location.LocationManager"/>
+<fullyQualifiedTypeName name="com.google.android.gms.maps.model.CameraPosition"/>
 </qualifiedTypeNameHistroy>
