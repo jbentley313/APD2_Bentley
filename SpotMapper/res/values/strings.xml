@@ -17,5 +17,6 @@
     <string name="delete_location">delete location</string>
     <string name="share_location">share location</string>
     <string name="compass">compass</string>
+    <string name="share">share</string>
 
 </resources>

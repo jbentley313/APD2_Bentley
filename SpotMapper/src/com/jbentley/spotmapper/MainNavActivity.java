@@ -68,10 +68,7 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		//start location listen
 		startLocationListen();
 
-
-
 	}
-
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -81,10 +78,6 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 
 		settingsIcon = menu.findItem(R.id.action_settings);
 		addNavIcon = menu.findItem(R.id.addNavIcon).setVisible(false);
-
-
-
-
 
 		return true;
 
@@ -97,12 +90,15 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 
 		int itemId = item.getItemId();
 		if (itemId == R.id.settingsIcon) {
-			Intent intent2 = new Intent(this, SettingsActivity.class);
-			startActivity(intent2);
+			Intent settingsIntent = new Intent (this, PreferenceDisplayActivity.class);
+			startActivity(settingsIntent);
+//			getFragmentManager().beginTransaction().replace(android.R.id.content, new Preferences()).commit();
+			
+			
 		} else if (itemId == R.id.addNavIcon) {
 			Log.i(Tag, "addNav");
 			saveLocation();
-		}
+		} 
 
 		return super.onOptionsItemSelected(item);
 
@@ -311,5 +307,7 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		return formattedDate;
 	}
 
+
+	
 
 }

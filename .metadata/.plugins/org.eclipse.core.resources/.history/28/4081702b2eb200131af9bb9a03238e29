@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:spotMapper="http://schemas.android.com/apk/res-auto" >
+
+    <!-- <item
+        android:id="@+id/action_share"
+        android:title="@string/share"
+        android:orderInCategory="1"
+        spotMapper:actionProviderClass="android.support.v7.widget.ShareActionProvider"
+        spotMapper:showAsAction="always"/> -->
+    <item
+        android:id="@+id/settingsIcon"
+        android:enabled="false"
+        android:icon="@drawable/ic_action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:title="@string/action_settings"/>
+    <item
+        android:id="@+id/compassIcon"
+        android:icon="@drawable/ic_action_compass"
+        android:orderInCategory="10"
+        android:showAsAction="always"
+        android:title="@string/compass"/>
+    <item
+        android:id="@+id/deleteIcon"
+        android:icon="@drawable/ic_action_discard"
+        android:orderInCategory="9"
+        android:showAsAction="always"
+        android:title="@string/delete_location"/>
+
+</menu>

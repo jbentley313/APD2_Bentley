@@ -37,6 +37,14 @@
             android:name="com.jbentley.spotmapper.SavedSpotNavigation"
             android:label="SavedSpotNav" >
         </activity>
+        <activity
+            android:name="com.jbentley.spotmapper.Preferences"
+            android:label="Prefs" >
+        </activity>
+        <activity
+            android:name="com.jbentley.spotmapper.PreferenceDisplayActivity"
+            android:label="Preferences" >
+        </activity>
 
         <meta-data
             android:name="com.google.android.gms.version"

@@ -1,5 +1,6 @@
 package com.jbentley.spotmapper;
 
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
@@ -10,6 +11,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
@@ -25,10 +27,15 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+
+
+
 
 public class SavedSpotNavigation extends FragmentActivity implements android.location.LocationListener, SensorEventListener{
 	MapView mapS;
@@ -42,15 +49,14 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 	private Boolean geoFenceLoc;
 	private SensorManager sensorMngr;
 	MenuItem compass;
+	
 	private static String Tag = "SavedSpotNavigationActivity";
 	LatLng myCLatLng;
 	float targetBearing;
 	Boolean changeCamera;
-
-
 	Sensor magnomtr;
 	Sensor accel;
-	
+	ShareActionProvider shareActionProvider;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +69,7 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 		actionBar.setDisplayShowHomeEnabled(true);
 
 		//change camera tilt and bearing flag
-		changeCamera =false;
+		changeCamera = false;
 
 		locationManagerS = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
@@ -140,10 +146,29 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// TODO Auto-generated method stub
 
+
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.saved_spot_action_bar, menu);
 
-		return true;
+
+
+//		MenuItem shareIcon = menu.findItem(R.id.actionshare);
+//
+//		shareActionProvider =  (ShareActionProvider) MenuItemCompat.getActionProvider(shareIcon);
+//		shareActionProvider.setShareIntent(getDefaultIntent());
+		return super.onCreateOptionsMenu(menu);
+	}
+
+
+	private Intent getDefaultIntent() {
+		// TODO Auto-generated method stub
+		//map location coordinates string
+				String linkToMySavedLoc = "http://maps.google.com/maps?q=loc:" + mySavedLoc.latitude + "," + mySavedLoc.longitude;
+				Intent shareIntent = new Intent(Intent.ACTION_SEND).putExtra(Intent.EXTRA_TEXT,"I'm sharing the location of " + "\"" + nameLoc + "\"" + " via Spot Mapper!" + "\n" +
+				linkToMySavedLoc)
+				.putExtra(Intent.EXTRA_SUBJECT, "See the location I shared with you on Spot Mapper!")
+				.setType("text/plain");
+		return shareIntent;
 	}
 
 
@@ -161,22 +186,43 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 			deleteLocaton();
 
 			//share location
-		} else if(itemId == R.id.shareIcon) {
-			Log.i(Tag, "share icon clicked");
-
-			//map location coordinates string
-			String linkToMySavedLoc = "http://maps.google.com/maps?q=loc:" + mySavedLoc.latitude + "," + mySavedLoc.longitude;
-
-			Intent shareIntent = new Intent();
-			shareIntent.setAction(Intent.ACTION_SEND);
-			shareIntent.putExtra(Intent.EXTRA_SUBJECT, "See the location I shared with you on Spot Mapper!");
-			shareIntent.putExtra(Intent.EXTRA_TEXT, "I'm sharing the location of " + "\"" + nameLoc + "\"" + " via Spot Mapper!" + "\n" +
-					linkToMySavedLoc);
-			shareIntent.setType("text/plain");
-			startActivity(shareIntent);
-
-			//compass icon
-		} else if(itemId == R.id.compassIcon) {
+		} 
+		//		else if(itemId == R.id.shareIcon) {
+		//			//map location coordinates string
+		//			String linkToMySavedLoc = "http://maps.google.com/maps?q=loc:" + mySavedLoc.latitude + "," + mySavedLoc.longitude;
+		//			Intent shareIntent = ShareCompat.IntentBuilder.from(this).setText("I'm sharing the location of " + "\"" + nameLoc + "\"" + " via Spot Mapper!" + "\n" +
+		//					linkToMySavedLoc)
+		//					.setSubject("See the location I shared with you on Spot Mapper!")
+		//					.setType("text/plain").getIntent();
+		//			
+		//			
+		//			startActivity(shareIntent);
+		//		}
+		
+//		String linkToMySavedLoc = "http://maps.google.com/maps?q=loc:" + mySavedLoc.latitude + "," + mySavedLoc.longitude;
+//		Intent shareIntent = new Intent(Intent.ACTION_SEND).putExtra(Intent.EXTRA_TEXT,"I'm sharing the location of " + "\"" + nameLoc + "\"" + " via Spot Mapper!" + "\n" +
+//				linkToMySavedLoc)
+//				.putExtra(Intent.EXTRA_SUBJECT, "See the location I shared with you on Spot Mapper!")
+//				.setType("text/plain");
+//
+//		shareActionProvider =  (ShareActionProvider) MenuItemCompat.getActionProvider(shareIcon);
+//		shareActionProvider.setShareIntent(shareIntent);
+		
+//		else if(itemId == R.id.action_shareSM) {
+//					//map location coordinates string
+//					String linkToMySavedLoc = "http://maps.google.com/maps?q=loc:" + mySavedLoc.latitude + "," + mySavedLoc.longitude;
+//					Intent shareIntents = new Intent (Intent.ACTION_SEND).putExtra(Intent.EXTRA_TEXT,"I'm sharing the location of " + "\"" + nameLoc + "\"" + " via Spot Mapper!" + "\n" +
+//							linkToMySavedLoc)
+//							.putExtra(Intent.EXTRA_SUBJECT,"See the location I shared with you on Spot Mapper!")
+//							.setType("text/plain");
+//					Intent shareIntent = Intent.createChooser(shareIntents, "share");
+//					
+//					
+//					startActivity(shareIntent);
+//				}
+		
+		//compass icon
+		if(itemId == R.id.compassIcon) {
 			Log.i (Tag, "compass icon clicked");
 
 
@@ -215,31 +261,36 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 
 	@Override
 	public void onLocationChanged(Location location) {
-		
+
 		if (changeCamera) {
-		myCLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-		Location bearingSavedLoc = new Location("newloc");
-		bearingSavedLoc.setLatitude(mySavedLoc.latitude);
-		bearingSavedLoc.setLongitude(mySavedLoc.longitude);
-		targetBearing = location.bearingTo(bearingSavedLoc);
-		updateCameraforCompassBearing(targetBearing);
-		Log.i(Tag, String.valueOf(targetBearing));
+			myCLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+
+
+			Location bearingSavedLoc = new Location("newloc");
+			bearingSavedLoc.setLatitude(mySavedLoc.latitude);
+			bearingSavedLoc.setLongitude(mySavedLoc.longitude);
+			targetBearing = location.bearingTo(bearingSavedLoc);
+
+			updateCameraforCompassBearing(targetBearing);
+			Log.i(Tag, String.valueOf(targetBearing));
 		}
 	}
-	
+
 	//position camera behind current location pointing towards target location
-		public void updateCameraforCompassBearing(float bearing) {
+	public void updateCameraforCompassBearing(float bearing) {
 
-			CameraPosition camPos = new CameraPosition.Builder()
-			.target(myCLatLng)
-			.bearing(bearing)
-			
-			.tilt(80.0f)
-			.zoom(mMapS.getCameraPosition().zoom)
-			.build();
-			mMapS.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
+		CameraPosition camPos = new CameraPosition.Builder()
+		.target(myCLatLng)
+		.bearing(bearing)
+		.tilt(80.0f)
+		.zoom(mMapS.getCameraPosition().zoom)
+		.build();
+		mMapS.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
 
-		}
+
+
+	}
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {

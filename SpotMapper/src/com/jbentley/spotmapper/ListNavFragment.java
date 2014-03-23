@@ -32,6 +32,8 @@ public class ListNavFragment extends ListFragment {
 		View view = inflater.inflate(R.layout.list_nav_frag, container, true);
 
 		init(view);
+		
+		
 
 		return view;
 
@@ -59,9 +61,11 @@ public class ListNavFragment extends ListFragment {
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
 				android.R.layout.simple_list_item_1, allLocInfo);
 
-
+		
 
 		setListAdapter(adapter);
+		
+		
 
 	}
 
@@ -69,6 +73,9 @@ public class ListNavFragment extends ListFragment {
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
 		super.onAttach(activity);
+		
+		
+		
 	}
 
 
@@ -83,6 +90,9 @@ public class ListNavFragment extends ListFragment {
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		// TODO Auto-generated method stub
 		super.onListItemClick(l, v, position, id);
+		
+		
+		
 		
 		Log.i("LISTCLICK", String.valueOf(position + 1));
 		Intent mapNavIntent = new Intent(getActivity(), SavedSpotNavigation.class);
@@ -107,6 +117,7 @@ public class ListNavFragment extends ListFragment {
 		startActivity(mapNavIntent);
 	}
 
+	
 	
 
 
