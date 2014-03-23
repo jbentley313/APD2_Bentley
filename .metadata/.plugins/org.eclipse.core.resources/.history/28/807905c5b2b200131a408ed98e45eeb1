@@ -1,0 +1,46 @@
+package com.jbentley.spotmapper;
+
+import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceFragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+public class Preferences extends PreferenceFragment implements OnPreferenceClickListener {
+
+
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		addPreferencesFromResource(R.xml.preferences);
+		
+		
+		Preference contactPick = (Preference)findPreference("contact_pref");
+	    contactPick.setOnPreferenceClickListener(this);
+		
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		View view = super.onCreateView(inflater, container, savedInstanceState);
+	    view.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+		return view;
+
+	
+	}
+
+	@Override
+	public boolean onPreferenceClick(Preference preference) {
+		// TODO Auto-generated method stub
+		Log.i("Pref", "contactprefpicker");
+		return false;
+	}
+
+}

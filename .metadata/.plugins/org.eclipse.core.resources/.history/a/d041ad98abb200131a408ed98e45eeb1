@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="Display" >
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/mapChoiceArray"
+            android:entryValues="@array/mapChoiceValues"
+            android:key="mapDisplayPref"
+            android:title="Map Display" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Geofence" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="geofencealertpref"
+            android:summaryOff="Proximity alerts are disabled"
+            android:summaryOn="Proximity alerts are enabled"
+            android:title="Proximity Alerts" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Emergency Contacts" >
+        <EditTextPreference
+            android:dialogTitle="Add a contact"
+            android:summary="sumss"
+            android:title="titless" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

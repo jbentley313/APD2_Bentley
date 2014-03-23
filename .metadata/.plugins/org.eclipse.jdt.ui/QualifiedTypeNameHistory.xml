@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="android.database.sqlite.SQLiteDatabase"/>
-<fullyQualifiedTypeName name="java.lang.Integer"/>
-<fullyQualifiedTypeName name="android.widget.ListView"/>
-<fullyQualifiedTypeName name="android.widget.CursorAdapter"/>
-<fullyQualifiedTypeName name="android.support.v4.widget.ListViewAutoScrollHelper"/>
-<fullyQualifiedTypeName name="android.app.ListFragment"/>
-<fullyQualifiedTypeName name="com.google.android.gms.internal.db"/>
-<fullyQualifiedTypeName name="android.app.ListActivity"/>
-<fullyQualifiedTypeName name="android.app.Activity"/>
-<fullyQualifiedTypeName name="com.jbentley.spotmapper.LocationInfo"/>
-<fullyQualifiedTypeName name="android.database.Cursor"/>
-<fullyQualifiedTypeName name="android.content.Context"/>
 <fullyQualifiedTypeName name="android.widget.ArrayAdapter"/>
 <fullyQualifiedTypeName name="android.widget.SimpleCursorAdapter"/>
 <fullyQualifiedTypeName name="android.view.ViewDebug.FlagToString"/>
@@ -19,15 +7,12 @@
 <fullyQualifiedTypeName name="android.app.AlertDialog"/>
 <fullyQualifiedTypeName name="android.content.DialogInterface.OnClickListener"/>
 <fullyQualifiedTypeName name="com.jbentley.spotmapper.MainNavActivity"/>
-<fullyQualifiedTypeName name="com.jbentley.spotmapper.R.layout"/>
 <fullyQualifiedTypeName name="android.view.View"/>
 <fullyQualifiedTypeName name="android.app.Fragment"/>
-<fullyQualifiedTypeName name="android.util.Log"/>
 <fullyQualifiedTypeName name="android.view.View.OnTouchListener"/>
 <fullyQualifiedTypeName name="android.view.MotionEvent"/>
 <fullyQualifiedTypeName name="com.jbentley.spotmapper.ListNavFragment"/>
 <fullyQualifiedTypeName name="com.google.android.gms.maps.UiSettings"/>
-<fullyQualifiedTypeName name="com.google.android.gms.maps.GoogleMap"/>
 <fullyQualifiedTypeName name="android.hardware.SensorManager"/>
 <fullyQualifiedTypeName name="android.location.Location"/>
 <fullyQualifiedTypeName name="com.google.android.gms.maps.model.LatLng"/>
@@ -39,7 +24,6 @@
 <fullyQualifiedTypeName name="android.view.MenuItem"/>
 <fullyQualifiedTypeName name="android.support.v4.app.ShareCompat.IntentBuilder"/>
 <fullyQualifiedTypeName name="com.jbentley.spotmapper.SavedSpotNavigation"/>
-<fullyQualifiedTypeName name="android.content.Intent"/>
 <fullyQualifiedTypeName name="android.support.v4.app.ShareCompat"/>
 <fullyQualifiedTypeName name="android.support.v4.view.MenuCompat"/>
 <fullyQualifiedTypeName name="android.support.v7.widget.ShareActionProvider.OnShareTargetSelectedListener"/>
@@ -50,14 +34,30 @@
 <fullyQualifiedTypeName name="android.R.id"/>
 <fullyQualifiedTypeName name="android.R.menu"/>
 <fullyQualifiedTypeName name="android.view.ActionProvider"/>
-<fullyQualifiedTypeName name="java.lang.Override"/>
 <fullyQualifiedTypeName name="android.support.v7.app.ActionBar"/>
-<fullyQualifiedTypeName name="android.R"/>
 <fullyQualifiedTypeName name="android.support.v4.app.FragmentActivity"/>
 <fullyQualifiedTypeName name="android.support.v4.view.MenuItemCompat"/>
 <fullyQualifiedTypeName name="android.preference.PreferenceFragment"/>
-<fullyQualifiedTypeName name="com.jbentley.spotmapper.Preferences"/>
 <fullyQualifiedTypeName name="com.jbentley.spotmapper.R.xml"/>
 <fullyQualifiedTypeName name="android.support.v4.app.FragmentManager"/>
+<fullyQualifiedTypeName name="android.R"/>
+<fullyQualifiedTypeName name="com.jbentley.spotmapper.Preferences"/>
+<fullyQualifiedTypeName name="android.app.Activity"/>
+<fullyQualifiedTypeName name="java.util.zip.Inflater"/>
+<fullyQualifiedTypeName name="com.jbentley.spotmapper.R.layout"/>
+<fullyQualifiedTypeName name="com.jbentley.spotmapper.PreferenceDisplayActivity"/>
+<fullyQualifiedTypeName name="android.content.SharedPreferences"/>
+<fullyQualifiedTypeName name="android.preference.PreferenceManager"/>
+<fullyQualifiedTypeName name="com.google.android.gms.maps.GoogleMap"/>
+<fullyQualifiedTypeName name="java.lang.Override"/>
 <fullyQualifiedTypeName name="com.jbentley.spotmapper.R.id"/>
+<fullyQualifiedTypeName name="android.preference.Preference"/>
+<fullyQualifiedTypeName name="android.preference.Preference.OnPreferenceClickListener"/>
+<fullyQualifiedTypeName name="android.util.Log"/>
+<fullyQualifiedTypeName name="android.content.Intent"/>
+<fullyQualifiedTypeName name="android.provider.ContactsContract.Contacts"/>
+<fullyQualifiedTypeName name="android.database.Cursor"/>
+<fullyQualifiedTypeName name="android.net.Uri"/>
+<fullyQualifiedTypeName name="android.provider.ContactsContract.CommonDataKinds.Phone"/>
+<fullyQualifiedTypeName name="android.provider.ContactsContract"/>
 </qualifiedTypeNameHistroy>

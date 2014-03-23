@@ -94,9 +94,6 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		if (itemId == R.id.settingsIcon) {
 			Intent settingsIntent = new Intent (this, PreferenceDisplayActivity.class);
 			startActivity(settingsIntent);
-//			getFragmentManager().beginTransaction().replace(android.R.id.content, new Preferences()).commit();
-			
-			
 		} else if (itemId == R.id.addNavIcon) {
 			Log.i(Tag, "addNav");
 			saveLocation();

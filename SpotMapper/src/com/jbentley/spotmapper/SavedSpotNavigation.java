@@ -232,6 +232,10 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 
 			changeCamera = true;
 
+		} 
+		if(itemId == R.id.action_settings){
+			Intent settingsIntent = new Intent (this, PreferenceDisplayActivity.class);
+			startActivity(settingsIntent);
 		}
 
 		return true;

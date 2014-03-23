@@ -1,7 +1,0 @@
-package com.jbentley.spotmapper;
-
-import android.preference.PreferenceFragment;
-
-public class Preferences extends PreferenceFragment {
-
-}

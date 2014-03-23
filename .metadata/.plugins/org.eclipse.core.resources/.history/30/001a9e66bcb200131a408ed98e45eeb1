@@ -1,0 +1,100 @@
+package com.jbentley.spotmapper;
+
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceFragment;
+import android.provider.ContactsContract;
+import android.provider.ContactsContract.CommonDataKinds.Phone;
+import android.provider.ContactsContract.Contacts;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+public class Preferences extends PreferenceFragment implements OnPreferenceClickListener {
+
+
+
+	private static final int CONTACT_PICKER_RESULT = 303;
+	String contactNumberString = "";
+	String contactNameString ="";
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		addPreferencesFromResource(R.xml.preferences);
+
+
+		Preference contactPick = (Preference)findPreference("contact_pref");
+		contactPick.setOnPreferenceClickListener(this);
+
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		View view = super.onCreateView(inflater, container, savedInstanceState);
+		view.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+		return view;
+
+
+	}
+
+	@Override
+	public boolean onPreferenceClick(Preference preference) {
+		// TODO Auto-generated method stub
+		Log.i("Pref", "contactprefpicker");
+
+		Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, Contacts.CONTENT_URI);
+		startActivityForResult(contactPickerIntent, CONTACT_PICKER_RESULT);
+
+		return false;
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		Cursor cursor = null;
+
+
+		if (requestCode == CONTACT_PICKER_RESULT) {
+			try {
+				Uri result = data.getData();
+				
+				// get the contact id from the result uri
+				String id = result.getLastPathSegment();
+
+				// query  name number
+				cursor = getActivity().getContentResolver().query(Phone.CONTENT_URI,
+						null, Phone.CONTACT_ID + "=?", new String[] { id },
+						null);
+
+				//name and number int
+				int contactNumber = cursor.getColumnIndex(Phone.DATA);
+				int contactName = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
+
+
+				// get name and number from cursor
+				if (cursor.moveToFirst()) {
+					contactNumberString = cursor.getString(contactNumber);
+					contactNameString = cursor.getString(contactName);
+					Log.i("Contact: ",  contactNameString + ", " + contactNumberString );
+				} else {
+					Log.i("Prefs", "Cursor empty, no results");
+				}
+			} catch (Exception e) {
+				Log.i("Prefs ExceptionE", "Failed to get contact data"+ e.getMessage().toString());
+			} finally {
+				if (cursor != null) {
+					cursor.close();
+				}
+			}
+		}
+	}
+}
