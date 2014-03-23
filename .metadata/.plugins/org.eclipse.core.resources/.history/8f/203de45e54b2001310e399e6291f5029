@@ -17,7 +17,6 @@ import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -27,7 +26,6 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
@@ -51,9 +49,7 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 	private Boolean geoFenceLoc;
 	private SensorManager sensorMngr;
 	MenuItem compass;
-	LocationManager locationManager;
-	GoogleMap mMap;
-
+	
 	private static String Tag = "SavedSpotNavigationActivity";
 	LatLng myCLatLng;
 	float targetBearing;
@@ -156,10 +152,10 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 
 
 
-		//		MenuItem shareIcon = menu.findItem(R.id.actionshare);
-		//
-		//		shareActionProvider =  (ShareActionProvider) MenuItemCompat.getActionProvider(shareIcon);
-		//		shareActionProvider.setShareIntent(getDefaultIntent());
+//		MenuItem shareIcon = menu.findItem(R.id.actionshare);
+//
+//		shareActionProvider =  (ShareActionProvider) MenuItemCompat.getActionProvider(shareIcon);
+//		shareActionProvider.setShareIntent(getDefaultIntent());
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -167,8 +163,8 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 	private Intent getDefaultIntent() {
 		// TODO Auto-generated method stub
 		//map location coordinates string
-		String linkToMySavedLoc = "http://maps.google.com/maps?q=loc:" + mySavedLoc.latitude + "," + mySavedLoc.longitude;
-		Intent shareIntent = new Intent(Intent.ACTION_SEND).putExtra(Intent.EXTRA_TEXT,"I'm sharing the location of " + "\"" + nameLoc + "\"" + " via Spot Mapper!" + "\n" +
+				String linkToMySavedLoc = "http://maps.google.com/maps?q=loc:" + mySavedLoc.latitude + "," + mySavedLoc.longitude;
+				Intent shareIntent = new Intent(Intent.ACTION_SEND).putExtra(Intent.EXTRA_TEXT,"I'm sharing the location of " + "\"" + nameLoc + "\"" + " via Spot Mapper!" + "\n" +
 				linkToMySavedLoc)
 				.putExtra(Intent.EXTRA_SUBJECT, "See the location I shared with you on Spot Mapper!")
 				.setType("text/plain");
@@ -202,29 +198,29 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 		//			
 		//			startActivity(shareIntent);
 		//		}
-
-		//		String linkToMySavedLoc = "http://maps.google.com/maps?q=loc:" + mySavedLoc.latitude + "," + mySavedLoc.longitude;
-		//		Intent shareIntent = new Intent(Intent.ACTION_SEND).putExtra(Intent.EXTRA_TEXT,"I'm sharing the location of " + "\"" + nameLoc + "\"" + " via Spot Mapper!" + "\n" +
-		//				linkToMySavedLoc)
-		//				.putExtra(Intent.EXTRA_SUBJECT, "See the location I shared with you on Spot Mapper!")
-		//				.setType("text/plain");
-		//
-		//		shareActionProvider =  (ShareActionProvider) MenuItemCompat.getActionProvider(shareIcon);
-		//		shareActionProvider.setShareIntent(shareIntent);
-
-		//		else if(itemId == R.id.action_shareSM) {
-		//					//map location coordinates string
-		//					String linkToMySavedLoc = "http://maps.google.com/maps?q=loc:" + mySavedLoc.latitude + "," + mySavedLoc.longitude;
-		//					Intent shareIntents = new Intent (Intent.ACTION_SEND).putExtra(Intent.EXTRA_TEXT,"I'm sharing the location of " + "\"" + nameLoc + "\"" + " via Spot Mapper!" + "\n" +
-		//							linkToMySavedLoc)
-		//							.putExtra(Intent.EXTRA_SUBJECT,"See the location I shared with you on Spot Mapper!")
-		//							.setType("text/plain");
-		//					Intent shareIntent = Intent.createChooser(shareIntents, "share");
-		//					
-		//					
-		//					startActivity(shareIntent);
-		//				}
-
+		
+//		String linkToMySavedLoc = "http://maps.google.com/maps?q=loc:" + mySavedLoc.latitude + "," + mySavedLoc.longitude;
+//		Intent shareIntent = new Intent(Intent.ACTION_SEND).putExtra(Intent.EXTRA_TEXT,"I'm sharing the location of " + "\"" + nameLoc + "\"" + " via Spot Mapper!" + "\n" +
+//				linkToMySavedLoc)
+//				.putExtra(Intent.EXTRA_SUBJECT, "See the location I shared with you on Spot Mapper!")
+//				.setType("text/plain");
+//
+//		shareActionProvider =  (ShareActionProvider) MenuItemCompat.getActionProvider(shareIcon);
+//		shareActionProvider.setShareIntent(shareIntent);
+		
+//		else if(itemId == R.id.action_shareSM) {
+//					//map location coordinates string
+//					String linkToMySavedLoc = "http://maps.google.com/maps?q=loc:" + mySavedLoc.latitude + "," + mySavedLoc.longitude;
+//					Intent shareIntents = new Intent (Intent.ACTION_SEND).putExtra(Intent.EXTRA_TEXT,"I'm sharing the location of " + "\"" + nameLoc + "\"" + " via Spot Mapper!" + "\n" +
+//							linkToMySavedLoc)
+//							.putExtra(Intent.EXTRA_SUBJECT,"See the location I shared with you on Spot Mapper!")
+//							.setType("text/plain");
+//					Intent shareIntent = Intent.createChooser(shareIntents, "share");
+//					
+//					
+//					startActivity(shareIntent);
+//				}
+		
 		//compass icon
 		if(itemId == R.id.compassIcon) {
 			Log.i (Tag, "compass icon clicked");
@@ -297,76 +293,43 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 	}
 
 	@Override
-	public void onResume(){
-		super.onResume();
-		SharedPreferences mySharedPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		// TODO Auto-generated method stub
 
-		String mapType = mySharedPrefs.getString("mapDisplayPref", "map");
-		locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,  1000 /*5 seconds*/  , 0, this);
-
-		//get the map fragment 
-		mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-		if (mMap != null) {
-			//enable my location
-			mMap.setMyLocationEnabled(true);
-
-
-
-
-			if(mapType.equalsIgnoreCase("1")){
-				Log.i("MAPTYPE", "Normal map");
-				mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
-
-			} else if(mapType.equalsIgnoreCase("2")){
-				Log.i("MAPTYPE", "Satellite");
-				mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-			} else if(mapType.equalsIgnoreCase("3")){
-				Log.i("MAPTYPE", "Hybrid");
-				mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-			}
-		}
-		}
-
-		@Override
-		public void onStatusChanged(String provider, int status, Bundle extras) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onProviderEnabled(String provider) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onProviderDisabled(String provider) {
-			// TODO Auto-generated method stub
-
-		}
-
-
-		@Override
-		public void onSensorChanged(SensorEvent event) {
-			// TODO Auto-generated method stub
-
-
-		}
-
-		@Override
-		public void onAccuracyChanged(Sensor sensor, int accuracy) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		protected void onDestroy() {
-			super.onDestroy();
-			if (sensorMngr != null) {
-				sensorMngr.unregisterListener(this);
-			}
-			changeCamera = false;
-		}
 	}
+
+	@Override
+	public void onProviderEnabled(String provider) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onProviderDisabled(String provider) {
+		// TODO Auto-generated method stub
+
+	}
+
+
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+		// TODO Auto-generated method stub
+
+
+	}
+
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if (sensorMngr != null) {
+			sensorMngr.unregisterListener(this);
+		}
+		changeCamera = false;
+	}
+}

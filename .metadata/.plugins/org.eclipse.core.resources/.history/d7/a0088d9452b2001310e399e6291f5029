@@ -289,7 +289,7 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 
 		if (GPSenabled) {
 
-			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,  1000 /*5 seconds*/  , 0, this);
+			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,  5000 /*5 seconds*/  , 0, this);
 
 			//get the map fragment 
 			mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
@@ -304,13 +304,13 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 					Log.i("MAPTYPE", "Normal map");
 					mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 					
-					
 				} else if(mapType.equalsIgnoreCase("2")){
 					Log.i("MAPTYPE", "Satellite");
 					mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
 				} else if(mapType.equalsIgnoreCase("3")){
 					Log.i("MAPTYPE", "Hybrid");
-					mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+					mapOptions.mapType(GoogleMap.MAP_TYPE_HYBRID)
+					.compassEnabled(true);
 				}
 
 //				//google map options

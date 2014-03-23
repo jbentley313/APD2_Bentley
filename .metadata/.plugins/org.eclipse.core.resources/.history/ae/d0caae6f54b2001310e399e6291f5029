@@ -327,7 +327,6 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 				mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 			}
 		}
-		}
 
 		@Override
 		public void onStatusChanged(String provider, int status, Bundle extras) {

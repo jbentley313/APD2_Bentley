@@ -289,7 +289,7 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 
 		if (GPSenabled) {
 
-			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,  1000 /*5 seconds*/  , 0, this);
+			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,  5000 /*5 seconds*/  , 0, this);
 
 			//get the map fragment 
 			mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
