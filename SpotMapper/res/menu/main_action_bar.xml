@@ -13,5 +13,11 @@
         android:orderInCategory="10"
         android:showAsAction="ifRoom"
         android:title="@string/add_waypoint"/>
+    
+    <item
+        android:id="@+id/emergencyIcon"
+        android:icon="@drawable/ic_action_alerts_and_states_warning"
+        android:showAsAction="always"
+        android:title="@string/emergency_alert"/>
 
 </menu>

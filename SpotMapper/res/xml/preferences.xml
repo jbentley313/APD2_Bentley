@@ -21,9 +21,10 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="Emergency Alert" >
         <Preference
+            android:icon="@drawable/ic_action_alerts_and_states_warning"
             android:key="contact_pref"
-            android:summary="To be used with emergency alert"
-            android:title="Add Emergency Contact" />
+            android:summary="No contacts saved"
+            android:title="Emergency Contacts" />
         
         
     </PreferenceCategory>

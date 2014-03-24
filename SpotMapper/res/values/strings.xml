@@ -18,5 +18,6 @@
     <string name="share_location">share location</string>
     <string name="compass">compass</string>
     <string name="share">share</string>
+    <string name="emergency_alert">emergency alert</string>
 
 </resources>

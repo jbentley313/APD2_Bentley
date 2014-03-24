@@ -13,8 +13,11 @@
  */
 package com.jbentley.spotmapper;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
@@ -26,17 +29,21 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.jbentley.spotmapper.LocationDialogFragment.LocationDialogFragmentListener;
 import android.app.ActionBar;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.telephony.PhoneNumberUtils;
+import android.telephony.gsm.SmsManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -50,7 +57,7 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 	MenuItem addNavIcon;
 
 	MapView map;
-	 GoogleMap mMap;
+	GoogleMap mMap;
 	LocationManager locationManager;
 	LatLng myLoc;
 
@@ -97,11 +104,91 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		} else if (itemId == R.id.addNavIcon) {
 			Log.i(Tag, "addNav");
 			saveLocation();
-		} 
+		} else if (itemId == R.id.emergencyIcon){
+
+			new AlertDialog.Builder(this)
+			.setTitle("Warning! Emergency Contacts Will Be Notified!")
+			.setMessage("Are you sure you want to send an emergency alert with your location?")
+			.setPositiveButton("Yes,  send now!", new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					sendMessagetoContacts();
+				}
+			})
+			.setNegativeButton("Cancel", null)
+			.setCancelable(true)
+			.show();
+
+		}
 
 		return super.onOptionsItemSelected(item);
 
 	}
+
+	private void sendMessagetoContacts() {
+
+		ArrayList<String> contactsList = new ArrayList<String>();
+		SharedPreferences mySharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+		Map<String,?> prefString = (Map<String, ?>) mySharedPrefs.getAll();
+
+		for(Map.Entry<String,?> entry : prefString.entrySet()){
+
+			String name =  entry.getValue().toString();
+			String number = entry.getKey().toString();
+
+			//format the number and replace +1, '(', and ')' with ""
+			if(number.contains("contact")){
+				String formattedNumber1 = PhoneNumberUtils.formatNumber(number
+						.replace("+1", "")
+						.replace("(", "")
+						.replace(")", "")
+						);
+
+				//replace dashes with empty space
+				String formattedNumberHolder = PhoneNumberUtils.formatNumber(formattedNumber1
+						.replaceAll("-", "")
+						.replaceAll(" ", ""));
+
+				//format the final number using PhoneNumberUtils
+				String numberOfContact = formattedNumberHolder.replace("contact:", "");
+				String numberOfContactFormatted = PhoneNumberUtils.formatNumber(numberOfContact);
+
+
+				String nameOfContact = name;
+
+				Log.i("contact list", nameOfContact + ": " + numberOfContactFormatted);
+				contactsList.add(nameOfContact + ": " + numberOfContactFormatted);
+
+				String linkToMySavedLoc = "http://maps.google.com/maps?q=loc:" + myLoc.latitude + "," + myLoc.longitude;
+
+				String outGoingMessage = "TEST!!!!.  My location: " +
+						linkToMySavedLoc + ". " + "Latitude: " + myLoc.latitude + ", " + "Longitude: " + myLoc.longitude;
+
+
+
+				Log.i("SMS", numberOfContactFormatted);
+
+				android.telephony.SmsManager smsMgr =  android.telephony.SmsManager.getDefault();
+				smsMgr.sendTextMessage(numberOfContactFormatted, null, outGoingMessage, null, null);
+
+			}
+
+		}
+
+
+
+
+
+		// TODO Auto-generated method stub
+		//			Intent smsIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + number));
+	}
+
+
+
+
 
 	//save location
 	private void saveLocation() {
@@ -246,9 +333,9 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		super.onResume();
 
 		startLocationListen();
-		
+
 		mMap.clear();
-		
+
 		//get listNavFrag
 		ListNavFragment lnf = (ListNavFragment) getFragmentManager().findFragmentById(R.id.listNavFrag);
 
@@ -272,16 +359,16 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 
 		boolean GPSenabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 		boolean NETWORKendabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-		
+
 		SharedPreferences mySharedPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-		
+
 		String mapType = mySharedPrefs.getString("mapDisplayPref", "map");
 		Log.i("MapType", mapType);
-		
-		
-		
+
+
+
 		if(mapType.equalsIgnoreCase("1")){
-			
+
 		}
 
 		if (GPSenabled) {
@@ -293,15 +380,15 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 			if (mMap != null) {
 				//enable my location
 				mMap.setMyLocationEnabled(true);
-				
-				
-				
-				
+
+
+
+
 				if(mapType.equalsIgnoreCase("1")){
 					Log.i("MAPTYPE", "Normal map");
 					mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-					
-					
+
+
 				} else if(mapType.equalsIgnoreCase("2")){
 					Log.i("MAPTYPE", "Satellite");
 					mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
@@ -310,25 +397,25 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 					mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 				}
 
-//				//google map options
-//				GoogleMapOptions mapOptions = new GoogleMapOptions();
-//				
-//				
-//				if(mapType.equalsIgnoreCase("1")){
-//					Log.i("MAPTYPE", "Normal map");
-//					mapOptions.mapType(GoogleMap.MAP_TYPE_NORMAL)
-//					.compassEnabled(true);
-//				} else if(mapType.equalsIgnoreCase("2")){
-//					Log.i("MAPTYPE", "Satellite");
-//					mapOptions.mapType(GoogleMap.MAP_TYPE_SATELLITE)
-//					.compassEnabled(true);
-//				} else if(mapType.equalsIgnoreCase("3")){
-//					Log.i("MAPTYPE", "Hybrid");
-//					mapOptions.mapType(GoogleMap.MAP_TYPE_HYBRID)
-//					.compassEnabled(true);
-//				}
+				//				//google map options
+				//				GoogleMapOptions mapOptions = new GoogleMapOptions();
+				//				
+				//				
+				//				if(mapType.equalsIgnoreCase("1")){
+				//					Log.i("MAPTYPE", "Normal map");
+				//					mapOptions.mapType(GoogleMap.MAP_TYPE_NORMAL)
+				//					.compassEnabled(true);
+				//				} else if(mapType.equalsIgnoreCase("2")){
+				//					Log.i("MAPTYPE", "Satellite");
+				//					mapOptions.mapType(GoogleMap.MAP_TYPE_SATELLITE)
+				//					.compassEnabled(true);
+				//				} else if(mapType.equalsIgnoreCase("3")){
+				//					Log.i("MAPTYPE", "Hybrid");
+				//					mapOptions.mapType(GoogleMap.MAP_TYPE_HYBRID)
+				//					.compassEnabled(true);
+				//				}
 
-				
+
 			}
 		} else {
 
@@ -348,6 +435,6 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 	}
 
 
-	
+
 
 }
