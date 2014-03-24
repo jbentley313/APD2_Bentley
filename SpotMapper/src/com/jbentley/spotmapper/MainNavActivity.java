@@ -12,9 +12,11 @@
  * device location.  A listview will be implemented for Milestone 2 to display saved locations.
  */
 package com.jbentley.spotmapper;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -34,6 +36,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -50,6 +54,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class MainNavActivity extends FragmentActivity implements  android.location.LocationListener, LocationDialogFragmentListener{
 	private static final String Tag = "[X][X] MainNavActivity ";
@@ -60,6 +65,8 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 	GoogleMap mMap;
 	LocationManager locationManager;
 	LatLng myLoc;
+	List<Address> addresses;
+	TextView addressTextResults;
 
 
 	@Override
@@ -73,6 +80,8 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 
 
 		locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+		addressTextResults = (TextView) findViewById(R.id.resultTextAddress);
 
 		//start location listen
 		startLocationListen();
@@ -132,6 +141,40 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		ArrayList<String> contactsList = new ArrayList<String>();
 		SharedPreferences mySharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
+
+
+
+		//geocoder to get address based on location
+		Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+		try {
+
+			this.addresses = geocoder.getFromLocation(myLoc.latitude, myLoc.longitude, 1);
+
+			Address address = addresses.get(0);
+
+			Log.i("address", addresses.toString());
+
+			if (address.toString() == "") {
+				addressTextResults.setText("Address Unavailable");
+			} else {
+				int i = 0;
+				while (address.getAddressLine(i) != null) {
+					addressTextResults.append("\n");
+					addressTextResults.append(address.getAddressLine(i++));
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			Log.e(Tag, e.getMessage().toString());
+		}
+
+
+
+
+
+
+
+
 		Map<String,?> prefString = (Map<String, ?>) mySharedPrefs.getAll();
 
 		for(Map.Entry<String,?> entry : prefString.entrySet()){
@@ -164,8 +207,11 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 
 				String linkToMySavedLoc = "http://maps.google.com/maps?q=loc:" + myLoc.latitude + "," + myLoc.longitude;
 
+				String addressFormatted = addressTextResults.getText().toString();
+				Log.i("addFORM", addressFormatted);
+
 				String outGoingMessage = "TEST!!!!.  My location: " +
-						linkToMySavedLoc + ". " + "Latitude: " + myLoc.latitude + ", " + "Longitude: " + myLoc.longitude;
+						linkToMySavedLoc + ". " + "Nearest address: " + addressFormatted  + "." ;
 
 
 
@@ -364,8 +410,6 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 
 		String mapType = mySharedPrefs.getString("mapDisplayPref", "map");
 		Log.i("MapType", mapType);
-
-
 
 		if(mapType.equalsIgnoreCase("1")){
 
