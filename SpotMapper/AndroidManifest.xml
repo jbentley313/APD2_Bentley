@@ -47,6 +47,10 @@
             android:name="com.jbentley.spotmapper.PreferenceDisplayActivity"
             android:label="Preferences" >
         </activity>
+        <activity
+            android:name="com.jbentley.spotmapper.SingleGeoFence"
+            android:label="SingleGeoFence" >
+        </activity>
 
         <meta-data
             android:name="com.google.android.gms.version"

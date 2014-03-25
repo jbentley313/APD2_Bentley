@@ -1,0 +1,12 @@
+package com.jbentley.spotmapper;
+
+public class SingleGeoFence {
+
+	private String geoID;
+	private Float geoRadius;
+	private Double geoLatitude;
+	private Double geoLongitude;
+	private int geoTranistionType;
+	private long geoExpiration;
+	
+}

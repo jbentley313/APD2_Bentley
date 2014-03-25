@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.internal.go;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
@@ -30,7 +33,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.jbentley.spotmapper.LocationDialogFragment.LocationDialogFragmentListener;
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -47,7 +53,6 @@ import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.telephony.PhoneNumberUtils;
-import android.telephony.gsm.SmsManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -67,6 +72,8 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 	LatLng myLoc;
 	List<Address> addresses;
 	TextView addressTextResults;
+	static final int GOOGLE_SERVICES_RESULT = 9000;
+	//	private Sim simpleGeoFence;
 
 
 	@Override
@@ -98,9 +105,7 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		addNavIcon = menu.findItem(R.id.addNavIcon).setVisible(false);
 
 		return true;
-
 	}
-
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -142,8 +147,6 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		SharedPreferences mySharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 
-
-
 		//geocoder to get address based on location
 		Geocoder geocoder = new Geocoder(this, Locale.getDefault());
 		try {
@@ -167,12 +170,6 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 			// TODO Auto-generated catch block
 			Log.e(Tag, e.getMessage().toString());
 		}
-
-
-
-
-
-
 
 
 		Map<String,?> prefString = (Map<String, ?>) mySharedPrefs.getAll();
@@ -199,7 +196,6 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 				String numberOfContact = formattedNumberHolder.replace("contact:", "");
 				String numberOfContactFormatted = PhoneNumberUtils.formatNumber(numberOfContact);
 
-
 				String nameOfContact = name;
 
 				Log.i("contact list", nameOfContact + ": " + numberOfContactFormatted);
@@ -213,28 +209,13 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 				String outGoingMessage = "TEST!!!!.  My location: " +
 						linkToMySavedLoc + ". " + "Nearest address: " + addressFormatted  + "." ;
 
-
-
 				Log.i("SMS", numberOfContactFormatted);
 
 				android.telephony.SmsManager smsMgr =  android.telephony.SmsManager.getDefault();
 				smsMgr.sendTextMessage(numberOfContactFormatted, null, outGoingMessage, null, null);
-
 			}
-
 		}
-
-
-
-
-
-		// TODO Auto-generated method stub
-		//			Intent smsIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + number));
 	}
-
-
-
-
 
 	//save location
 	private void saveLocation() {
@@ -262,8 +243,12 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		//Dispaly a snippet on a pin if loc is tagged for geo
 		String geoDisplay;
 
+		//tagged for geofence
 		if (isTaggedForGeo){
 			geoDisplay = "Tagged for Geofence";
+
+			//geofence create
+
 		} else {
 			geoDisplay = "Not tagged for Geofence";
 		}
@@ -304,9 +289,7 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 
 			//call init on listnavfrag
 			lnf.init(lv);
-
 		}
-
 	}
 
 	//on pause remove location updates
@@ -378,6 +361,9 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		// TODO Auto-generated method stub
 		super.onResume();
 
+		//check to see if google play service available
+		googleServiceAvailable();
+
 		startLocationListen();
 
 		mMap.clear();
@@ -396,7 +382,6 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 
 		//call init on listnavfrag
 		lnf.init(lv);
-
 	}
 
 	//start location listener
@@ -411,13 +396,9 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		String mapType = mySharedPrefs.getString("mapDisplayPref", "map");
 		Log.i("MapType", mapType);
 
-		if(mapType.equalsIgnoreCase("1")){
-
-		}
-
 		if (GPSenabled) {
 
-			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,  1000 /*5 seconds*/  , 0, this);
+			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,  1000 /*1 second*/  , 0, this);
 
 			//get the map fragment 
 			mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
@@ -425,13 +406,9 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 				//enable my location
 				mMap.setMyLocationEnabled(true);
 
-
-
-
 				if(mapType.equalsIgnoreCase("1")){
 					Log.i("MAPTYPE", "Normal map");
 					mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
 
 				} else if(mapType.equalsIgnoreCase("2")){
 					Log.i("MAPTYPE", "Satellite");
@@ -441,25 +418,6 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 					mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 				}
 
-				//				//google map options
-				//				GoogleMapOptions mapOptions = new GoogleMapOptions();
-				//				
-				//				
-				//				if(mapType.equalsIgnoreCase("1")){
-				//					Log.i("MAPTYPE", "Normal map");
-				//					mapOptions.mapType(GoogleMap.MAP_TYPE_NORMAL)
-				//					.compassEnabled(true);
-				//				} else if(mapType.equalsIgnoreCase("2")){
-				//					Log.i("MAPTYPE", "Satellite");
-				//					mapOptions.mapType(GoogleMap.MAP_TYPE_SATELLITE)
-				//					.compassEnabled(true);
-				//				} else if(mapType.equalsIgnoreCase("3")){
-				//					Log.i("MAPTYPE", "Hybrid");
-				//					mapOptions.mapType(GoogleMap.MAP_TYPE_HYBRID)
-				//					.compassEnabled(true);
-				//				}
-
-
 			}
 		} else {
 
@@ -468,9 +426,9 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		if (NETWORKendabled) {
 			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000/*10 seconds*/, 0, this);
 		}
-
 	}
 
+	//get current time
 	private String getCurrentTime() {
 		// TODO Auto-generated method stub
 		SimpleDateFormat dateFormatter = new SimpleDateFormat("EEE  MMM dd, yyyy ' at' h:mm:a", Locale.getDefault());
@@ -478,7 +436,60 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		return formattedDate;
 	}
 
+	//check if google services is available
+	private boolean googleServiceAvailable(){
+
+		int googleResultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+
+		//google play service is installed
+		if(ConnectionResult.SUCCESS == googleResultCode) {
+			Log.i(Tag, "GooglePlayServices SUCCESS");
+			return true;
+		} else {
+			ErrorFragDialog errorFrag = new ErrorFragDialog();
+			errorFrag.setDialog(GooglePlayServicesUtil.getErrorDialog(googleResultCode, this, GOOGLE_SERVICES_RESULT));
+			errorFrag.show(getFragmentManager(), "GooglePlayServicesError");
+
+			return false;
+		}
+
+	}
+
+	//dialog fragment for googledialog error
+	public static class ErrorFragDialog extends DialogFragment {
+
+		private Dialog googleErrorDialog;
+
+		public ErrorFragDialog(){
+			super();
+			googleErrorDialog = null;
+		}
+
+		public void setDialog(Dialog dialog) {
+			googleErrorDialog = dialog;
+		}
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			return googleErrorDialog;
+		}
+	}
 
 
+	@Override
+	protected void onActivityResult(
+			int requestCode, int resultCode, Intent data) {
+		// Decide what to do based on the original request code
+		switch (requestCode) {
 
+		case GOOGLE_SERVICES_RESULT :
+
+			switch (resultCode) {
+
+			case Activity.RESULT_OK :
+
+				break;
+			}
+		}
+	}
 }
