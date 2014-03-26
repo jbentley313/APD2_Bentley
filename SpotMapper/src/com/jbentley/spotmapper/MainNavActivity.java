@@ -19,13 +19,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.internal.go;
+import com.google.android.gms.location.Geofence;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
@@ -46,7 +44,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
@@ -73,7 +70,13 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 	List<Address> addresses;
 	TextView addressTextResults;
 	static final int GOOGLE_SERVICES_RESULT = 9000;
-	//	private Sim simpleGeoFence;
+	private SingleGeoFence singleGeoFence;
+	private SingleGeoFenceStore singleGeoStore;
+	final String LAT_KEY = "latitudeKey";
+	 final String LNG_KEY = "longitudeKey";
+	 final String RADIUS_KEY = "radiusKey";
+	 final String TRANSITION_KEY = "transitionKey";
+	 final String EXPIRATION_KEY = "expirationKey";
 
 
 	@Override
@@ -89,9 +92,25 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
 		addressTextResults = (TextView) findViewById(R.id.resultTextAddress);
+		
+		
 
 		//start location listen
 		startLocationListen();
+		
+//		SharedPreferences mySharedPrefs2 = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+//		
+		
+		SharedPreferences mySharedPrefs2 = this.getSharedPreferences("mySharedGeoPrefs", Context.MODE_PRIVATE);
+		
+		Map<String,?> keys = mySharedPrefs2.getAll();
+
+		for(Map.Entry<String,?> entry : keys.entrySet()){
+		            Log.i("map values",entry.getKey() + ": " + 
+		                                   entry.getValue().toString());            
+		 }
+		
+		
 
 	}
 
@@ -247,6 +266,12 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		if (isTaggedForGeo){
 			geoDisplay = "Tagged for Geofence";
 
+			singleGeoFence = new SingleGeoFence(locNameText, 10.0f, myLoc.latitude, myLoc.longitude, Geofence.GEOFENCE_TRANSITION_ENTER, Geofence.NEVER_EXPIRE);
+			singleGeoStore = new SingleGeoFenceStore(this);
+			
+			singleGeoStore.setGeoFence(locNameText, singleGeoFence);
+			
+			
 			//geofence create
 
 		} else {
@@ -475,6 +500,22 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		}
 	}
 
+
+
+	public void setGeofence(String id, SingleGeoFence geofence){
+		
+		 
+		
+	}
+
+	
+	
+	
+
+	
+	
+	
+	
 
 	@Override
 	protected void onActivityResult(

@@ -1,5 +1,10 @@
 package com.jbentley.spotmapper;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.util.Log;
+
 import com.google.android.gms.location.Geofence;
 
 public class SingleGeoFence {
@@ -11,6 +16,7 @@ public class SingleGeoFence {
 	private int geoTranistionType;
 	private long geoExpiration;
 
+	//empty constructor for a single geofence
 	public SingleGeoFence(){
 
 	}
@@ -25,38 +31,51 @@ public class SingleGeoFence {
 		this.geoTranistionType = gTransition;
 		this.geoExpiration = gExpiration;
 	}
-	
-	//getters
+
+	//getters////
+	//get id
 	public String getID(){
 		return geoID;
 	}
-	
+
+	//get radius
 	public Float getRadius(){
 		return geoRadius;
 	}
 
-	public Double getLat(){
+	//get latitude
+	public double getLat(){
 		return geoLatitude;
 	}
-	
-	public Double getLng(){
+
+	//get longitude
+	public double getLng(){
 		return geoLongitude;
 	}
-	
+
+	//get transition type
 	public int getTransition(){
 		return geoTranistionType;
 	}
-	
-	public Long getExpiration(){
+
+	//get expiration 
+	public long getExpiration(){
 		return geoExpiration;
 	}
-	
+
+	//make a new geofence
 	public Geofence makeGeoFence(){
+		Log.i("Geofence", "builder");
 		return new Geofence.Builder()
 		.setRequestId(getID())
 		.setCircularRegion(getLat(), getLng(), getRadius())
 		.setTransitionTypes(getTransition())
 		.setExpirationDuration(getExpiration())
 		.build();
+
+
 	}
+
+
+	
 }

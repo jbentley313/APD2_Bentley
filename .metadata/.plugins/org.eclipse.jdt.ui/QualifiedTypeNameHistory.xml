@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="android.widget.ShareActionProvider"/>
-<fullyQualifiedTypeName name="com.google.android.gms.R"/>
-<fullyQualifiedTypeName name="android.support.v7.widget.ShareActionProvider"/>
 <fullyQualifiedTypeName name="android.R.id"/>
 <fullyQualifiedTypeName name="android.R.menu"/>
 <fullyQualifiedTypeName name="android.view.ActionProvider"/>
@@ -19,20 +16,14 @@
 <fullyQualifiedTypeName name="com.google.android.gms.maps.GoogleMap"/>
 <fullyQualifiedTypeName name="java.lang.Override"/>
 <fullyQualifiedTypeName name="android.preference.Preference.OnPreferenceClickListener"/>
-<fullyQualifiedTypeName name="android.util.Log"/>
 <fullyQualifiedTypeName name="android.provider.ContactsContract.Contacts"/>
 <fullyQualifiedTypeName name="android.database.Cursor"/>
 <fullyQualifiedTypeName name="android.provider.ContactsContract.CommonDataKinds.Phone"/>
 <fullyQualifiedTypeName name="android.provider.ContactsContract"/>
-<fullyQualifiedTypeName name="android.content.SharedPreferences.Editor"/>
-<fullyQualifiedTypeName name="java.util.Map"/>
-<fullyQualifiedTypeName name="android.preference.PreferenceManager"/>
-<fullyQualifiedTypeName name="android.content.SharedPreferences"/>
 <fullyQualifiedTypeName name="android.telephony.PhoneNumberUtils"/>
 <fullyQualifiedTypeName name="android.preference.Preference.OnPreferenceChangeListener"/>
 <fullyQualifiedTypeName name="android.content.SharedPreferences.OnSharedPreferenceChangeListener"/>
 <fullyQualifiedTypeName name="android.preference.Preference"/>
-<fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="com.jbentley.spotmapper.Preferences"/>
 <fullyQualifiedTypeName name="android.net.Uri"/>
 <fullyQualifiedTypeName name="android.telephony.gsm.SmsManager"/>
@@ -60,4 +51,13 @@
 <fullyQualifiedTypeName name="com.google.android.gms.internal.er"/>
 <fullyQualifiedTypeName name="com.jbentley.spotmapper.MainNavActivity.ErrorFragDialog"/>
 <fullyQualifiedTypeName name="com.google.android.gms.common.ConnectionResult"/>
+<fullyQualifiedTypeName name="android.content.SharedPreferences.Editor"/>
+<fullyQualifiedTypeName name="com.jbentley.spotmapper.SingleGeoFence"/>
+<fullyQualifiedTypeName name="android.util.Log"/>
+<fullyQualifiedTypeName name="com.google.android.gms.location.Geofence"/>
+<fullyQualifiedTypeName name="com.google.android.gms.location.Geofence.Builder"/>
+<fullyQualifiedTypeName name="android.content.SharedPreferences"/>
+<fullyQualifiedTypeName name="java.util.Map"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="android.preference.PreferenceManager"/>
 </qualifiedTypeNameHistroy>

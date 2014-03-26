@@ -8,3 +8,4 @@ logcat.view.colsize.TID=46
 logcat.view.colsize.Tag=115
 logcat.view.colsize.Text=545
 logcat.view.colsize.Time=140
+logcat.view.filters.list=name\: 'sm', tag\: '', text\: '', pid\: '', app\: 'com.jbentley.spotmapper', level\: 'verbose', 

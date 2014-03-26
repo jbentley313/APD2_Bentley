@@ -1,0 +1,135 @@
+package com.jbentley.spotmapper;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.util.Log;
+
+import com.google.android.gms.location.Geofence;
+
+public class SingleGeoFence {
+
+	private String geoID;
+	private Float geoRadius;
+	private Double geoLatitude;
+	private Double geoLongitude;
+	private int geoTranistionType;
+	private long geoExpiration;
+
+	//empty constructor for a single geofence
+	public SingleGeoFence(){
+
+	}
+
+	//single geofence constructor
+	public SingleGeoFence(String gId, Float gRadius, Double gLat, Double gLong, int gTransition, long gExpiration) {
+
+		this.geoID = gId;
+		this.geoRadius = gRadius;
+		this.geoLatitude = gLat;
+		this.geoLongitude = gLong;
+		this.geoTranistionType = gTransition;
+		this.geoExpiration = gExpiration;
+	}
+
+	//getters////
+	//get id
+	public String getID(){
+		return geoID;
+	}
+
+	//get radius
+	public Float getRadius(){
+		return geoRadius;
+	}
+
+	//get latitude
+	public double getLat(){
+		return geoLatitude;
+	}
+
+	//get longitude
+	public double getLng(){
+		return geoLongitude;
+	}
+
+	//get transition type
+	public int getTransition(){
+		return geoTranistionType;
+	}
+
+	//get expiration 
+	public long getExpiration(){
+		return geoExpiration;
+	}
+
+	//make a new geofence
+	public Geofence makeGeoFence(){
+		Log.i("Geofence", "builder");
+		return new Geofence.Builder()
+		.setRequestId(getID())
+		.setCircularRegion(getLat(), getLng(), getRadius())
+		.setTransitionTypes(getTransition())
+		.setExpirationDuration(getExpiration())
+		.build();
+
+
+	}
+
+
+	public class SingleGeoFenceStore {
+		final String LAT_KEY = "latitudeKey";
+		final String LNG_KEY = "longitudeKey";
+		final String RADIUS_KEY = "radiusKey";
+		final String TRANSITION_KEY = "transitionKey";
+		final String EXPIRATION_KEY = "expirationKey";
+		private final SharedPreferences mySharedPrefs;
+
+		public static final float INVALID_FLOAT = -999.0f;
+		public static final int INVALID_INT = -999;
+		public static final long INVALID_LONG = -999l;
+
+		public SingleGeoFenceStore(Context context){
+
+			mySharedPrefs = context.getSharedPreferences("mySharedGeoPrefs", Context.MODE_PRIVATE);
+		}
+
+		private String getGeofenceFKey(String id,
+				String fieldName) {
+			return  id + "_" + fieldName;
+		}
+
+		public SingleGeoFence getGeoFence(String id) {
+
+			double latitudeGF = mySharedPrefs.getFloat(getGeofenceFKey(id, LAT_KEY), INVALID_FLOAT);
+			double longitudeGF = mySharedPrefs.getFloat(getGeofenceFKey(id, LAT_KEY), INVALID_FLOAT);
+			float radiusGF = mySharedPrefs.getFloat(getGeofenceFKey(id, RADIUS_KEY), INVALID_FLOAT);
+			int transitionTypeGF = mySharedPrefs.getInt(getGeofenceFKey(id, TRANSITION_KEY), INVALID_INT);
+			long expirationGF = mySharedPrefs.getLong(getGeofenceFKey(id, EXPIRATION_KEY), INVALID_LONG);
+
+			if (latitudeGF != INVALID_FLOAT && longitudeGF != INVALID_FLOAT && radiusGF != INVALID_FLOAT 
+					&& expirationGF != INVALID_LONG && transitionTypeGF != INVALID_INT){
+
+				return new SingleGeoFence(id, radiusGF, latitudeGF, longitudeGF, transitionTypeGF, expirationGF);
+			} else {
+
+				return null;
+			}
+		}
+
+		public void setGeoFence(String id, SingleGeoFence geofence) {
+			
+			Editor myEditor = mySharedPrefs.edit();
+			
+			myEditor.putInt(getGeofenceFKey(id, LAT_KEY),  geofence.getTransition());
+			myEditor.putFloat(getGeofenceFKey(id, LAT_KEY), (float) geofence.getLat());
+			myEditor.putFloat(getGeofenceFKey(id, LNG_KEY), (float) geofence.getLng());
+			myEditor.putFloat(getGeofenceFKey(id, RADIUS_KEY), (float) geofence.getRadius());
+			myEditor.putLong(getGeofenceFKey(id, LAT_KEY), geofence.getExpiration());
+			
+			myEditor.commit();
+			
+		}
+
+	}
+}
