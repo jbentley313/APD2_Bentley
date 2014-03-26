@@ -5,3 +5,6 @@
 1395542284209	Move file
 1395549305928	Move file
 1395614633396	Extracts string 'emergency alert' into R.string.emergency_alert
+1395797468011	Rename compilation unit 'TransistionRecievedIntentSevice.java'
+1395797572327	Rename compilation unit 'TransistionReceivedIntentSevice.java'
+1395803318605	Extracts string 'share location' into R.string.share_location

@@ -2,30 +2,25 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:spotmapper="http://schemas.android.com/apk/res-auto" >
 
-   
-    
     <item
         android:id="@+id/compassIcon"
         android:icon="@drawable/ic_action_compass"
         android:showAsAction="always"
         android:title="@string/compass"/>
-    
-     <!-- <item
+    <item
         android:id="@+id/actionshare"
-        android:title="@string/share"
-        spotmapper:actionProviderClass="android.support.v7.widget.ShareActionProvider"
-        spotmapper:showAsAction="always"/> -->
-        
+        android:actionProviderClass="android.widget.ShareActionProvider"
+        android:showAsAction="always"
+        android:title="@string/share_location"/>
     <item
         android:id="@+id/deleteIcon"
         android:icon="@drawable/ic_action_discard"
-        android:showAsAction="ifRoom"
+        android:showAsAction="always"
         android:title="@string/delete_location"/>
-    
     <item
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_action_settings"
-        android:showAsAction="ifRoom"
+        android:showAsAction="always"
         android:title="@string/action_settings"/>
 
 </menu>

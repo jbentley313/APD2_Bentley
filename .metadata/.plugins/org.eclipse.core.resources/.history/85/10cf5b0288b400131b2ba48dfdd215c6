@@ -1,0 +1,9 @@
+package com.jbentley.spotmapper;
+
+public class TransistionReceivedIntentService {
+
+	
+	public TransistionReceivedIntentService(){
+		super("TransistionReceivedIntentService");
+	}
+}

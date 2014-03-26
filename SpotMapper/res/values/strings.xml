@@ -19,5 +19,6 @@
     <string name="compass">compass</string>
     <string name="share">share</string>
     <string name="emergency_alert">emergency alert</string>
+    <string name="entering_a_geofence_">Entering a GeoFence!</string>
 
 </resources>

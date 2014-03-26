@@ -53,7 +53,7 @@ public class Preferences extends PreferenceFragment implements OnPreferenceClick
 		preference = findPreference("contact_pref");
 		String allContacts = logAllContacts().toString();
 		if(!allContacts.contentEquals("[]")){
-		preference.setSummary(allContacts);
+		preference.setSummary(allContacts.replace("[", "").replace("]", "").replace(",", "\n"));
 		}
 		
 		
