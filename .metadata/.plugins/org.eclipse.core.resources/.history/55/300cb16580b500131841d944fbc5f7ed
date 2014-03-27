@@ -258,8 +258,8 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 				}
 
 				//out going message string
-				String outGoingMessage = "Emergency Alert! Send Help:  location: " +
-						linkToMySavedLoc + " Address: " + addressFormatted  + "." ;
+				String outGoingMessage = "Emergency Alert. Send Help:  location: " +
+						linkToMySavedLoc + ". " + " Address: " + addressFormatted  + "." ;
 
 				Log.i("SMS", numberOfContactFormatted);
 
