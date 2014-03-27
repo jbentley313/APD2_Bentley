@@ -2,7 +2,7 @@
 <resources>
 
     <string-array name="mapChoiceArray">
-        <item>Map</item>
+        <item>Map (normal)</item>
         <item>Satellite</item>
         <item>Hybrid</item>
     </string-array>

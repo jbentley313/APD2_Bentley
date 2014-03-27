@@ -32,13 +32,16 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.jbentley.spotmapper.LocationDialogFragment.LocationDialogFragmentListener;
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
@@ -50,6 +53,7 @@ import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.telephony.PhoneNumberUtils;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -57,6 +61,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainNavActivity extends FragmentActivity implements  android.location.LocationListener, LocationDialogFragmentListener 
 {
@@ -88,6 +93,7 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 	private REQUEST_TYPE  mRequestType;
 	public enum REQUEST_TYPE  {ADD, REMOVE};
 	private boolean mInProgress;
+	BroadcastReceiver smsSentBCReceiver; 
 
 
 	@Override
@@ -121,6 +127,8 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 			Log.i("map values",entry.getKey() + ": " + 
 					entry.getValue().toString());            
 		}
+
+
 
 
 
@@ -255,12 +263,20 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 
 				Log.i("SMS", numberOfContactFormatted);
 
+
+				//sent sms intent and sentPending intent to receive code after sending sms
+				Intent sentIntent = new Intent("SMS_SENT");
+				PendingIntent sentPendingIntent = PendingIntent.getBroadcast(getApplicationContext(),0,sentIntent,0);
+
+
 				//send sms
 				android.telephony.SmsManager smsMgr =  android.telephony.SmsManager.getDefault();
-				smsMgr.sendTextMessage(numberOfContactFormatted, null, outGoingMessage, null, null);
+				smsMgr.sendTextMessage(numberOfContactFormatted, null, outGoingMessage, sentPendingIntent, null);
 			}
 		}
 	}
+
+
 
 	//save location
 	private void saveLocation() {
@@ -314,7 +330,7 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 			Marker savedLocMarker = mMap.addMarker(new MarkerOptions()
 			.position(myLoc)
 			.title(locNameText));
-			
+
 
 			savedLocMarker.showInfoWindow();
 
@@ -354,6 +370,10 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 
 		Log.i(Tag, "onPause");
 		locationManager.removeUpdates(this);
+		
+		if(smsSentBCReceiver !=null){
+		unregisterReceiver(smsSentBCReceiver);
+		}
 	}
 
 	//onLocationChanged
@@ -437,6 +457,38 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 
 		//call init on listnavfrag
 		lnf.init(lv);
+
+		//sms broadcast receiver
+		BroadcastReceiver smsSentBCReceiver = new BroadcastReceiver() {
+
+			//on receive broadcast
+			@Override
+			public void onReceive(Context arg0, Intent arg1) {
+				// TODO Auto-generated method stub
+				switch (getResultCode()) {
+				case Activity.RESULT_OK:
+					Toast.makeText(getBaseContext(), "Your emergency message has been sent!", Toast.LENGTH_LONG).show();
+					break;
+				case SmsManager.RESULT_ERROR_NO_SERVICE:
+					Toast.makeText(getBaseContext(), "Emergency message NOT sent, No Service! Try again!", Toast.LENGTH_LONG).show();
+					break;
+				case SmsManager.RESULT_ERROR_RADIO_OFF:
+					Toast.makeText(getBaseContext(), "Emergency message NOT sent! Radio is OFF!", Toast.LENGTH_LONG).show();
+					break;
+				case SmsManager.RESULT_ERROR_NULL_PDU:
+					Toast.makeText(getBaseContext(), "Emergency message NOT sent! (Null PDU)", Toast.LENGTH_LONG).show();
+					break;
+				case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+					Toast.makeText(getBaseContext(), "Emergency message NOT sent! (Generic Failure)", Toast.LENGTH_LONG).show();
+					break;
+				default:
+					break;
+				}
+
+			}
+		};
+		//register the broadcast receiver
+		registerReceiver(smsSentBCReceiver, new IntentFilter("SMS_SENT"));
 	}
 
 	//start location listener

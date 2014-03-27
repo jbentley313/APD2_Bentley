@@ -12,7 +12,7 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="Geofence" >
         <CheckBoxPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:icon="@drawable/ic_action_addnav"
             android:key="geofencealertpref"
             android:summaryOff="Proximity alerts are disabled"
