@@ -20,5 +20,6 @@
     <string name="share">share</string>
     <string name="emergency_alert">emergency alert</string>
     <string name="entering_a_geofence_">Entering a GeoFence!</string>
+    <string name="delecontacts">delecontacts</string>
 
 </resources>

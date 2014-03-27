@@ -1,18 +1,18 @@
 package com.jbentley.spotmapper;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
+import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
-import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceManager;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 public class Preferences extends PreferenceFragment implements OnPreferenceClickListener, OnSharedPreferenceChangeListener{
 
@@ -34,6 +35,8 @@ public class Preferences extends PreferenceFragment implements OnPreferenceClick
 	String contactNameString ="";
 	private Preference preference;
 	String numberOfContact;
+	SharedPreferences mySharedPrefs;
+	SharedPreferences.Editor myEditor; 
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -45,18 +48,22 @@ public class Preferences extends PreferenceFragment implements OnPreferenceClick
 		Preference contactPick = (Preference)findPreference("contact_pref");
 		contactPick.setOnPreferenceClickListener(this);
 
+		//set a clicklistener for the delete contact preference
+		Preference deleteContact = findPreference("del_con");
+		deleteContact.setOnPreferenceClickListener(this);
+
 		//get shared prefs
-		SharedPreferences mySharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		mySharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 		mySharedPrefs.registerOnSharedPreferenceChangeListener(this);
-		
-		
+		myEditor = mySharedPrefs.edit();
+
+		//get all contacts saved and format
 		preference = findPreference("contact_pref");
 		String allContacts = logAllContacts().toString();
 		if(!allContacts.contentEquals("[]")){
-		preference.setSummary(allContacts.replace("[", "").replace("]", "").replace(",", "\n"));
+			preference.setSummary(allContacts.replace("[", "").replace("]", "").replace(",", "\n"));
 		}
-		
-		
+
 	}
 
 	@Override
@@ -67,21 +74,74 @@ public class Preferences extends PreferenceFragment implements OnPreferenceClick
 		//change bg color of pref frag
 		view.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
 		return view;
-
-
 	}
 
 	//preference click handler
 	@Override
-	public boolean onPreferenceClick(Preference preference) {
+	public boolean onPreferenceClick(Preference preferenceClicked) {
 		// TODO Auto-generated method stub
-		Log.i("Pref", "contactprefpicker");
 
-		Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, Contacts.CONTENT_URI);
-		startActivityForResult(contactPickerIntent, CONTACT_PICKER_RESULT);
+		//add contact
+		if (preferenceClicked.getKey().equalsIgnoreCase("contact_pref")){
+			Log.i("Pref", "contactprefpicker");
+			Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, Contacts.CONTENT_URI);
+			startActivityForResult(contactPickerIntent, CONTACT_PICKER_RESULT);
 
+			return true;
+
+		} else if (preferenceClicked.getKey().equalsIgnoreCase("del_con")){
+
+			Log.i("preference click", "delete");
+
+			//alert for confirmation of delete
+			new AlertDialog.Builder(getActivity())
+
+			.setTitle("Delete all saved emergency contacts?")
+			.setMessage("This cannot be undone!")
+			.setPositiveButton("Delete", new OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					//get all shared prefs and get contacts
+					Map<String,?> prefString = (Map<String, ?>) mySharedPrefs.getAll();
+					int sizeOfPrefs = (prefString.size());
+
+					//emergency contacts are not empty
+					if(sizeOfPrefs != 2 ){
+						for(Map.Entry<String,?> entry : prefString.entrySet()){
+
+							String number = entry.getKey().toString();
+
+							//remove contacts from shared prefs that contain "contact" as first part of key
+							if(number.contains("contact")){
+
+								Log.i("contact", number);
+								myEditor.remove(number);
+								myEditor.commit();
+							}
+						}
+
+						//emergency contacts are empty
+					} else {
+
+						//formt summary for emergency contacts
+						preference = findPreference("contact_pref");
+						preference.setSummary("No contacts saved");
+
+						Toast.makeText(getActivity(), "No contacts to delete", Toast.LENGTH_SHORT).show();
+					}
+				}
+
+			})
+
+			.setCancelable(true)
+			.setNegativeButton("Cancel", null)
+			.show();
+			
+		}
 		return false;
 	}
+
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -89,10 +149,6 @@ public class Preferences extends PreferenceFragment implements OnPreferenceClick
 
 		//use a cursor to get contact data
 		Cursor cursor = null;
-
-		//get shared prefs
-		SharedPreferences mySharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-		SharedPreferences.Editor myEditor = mySharedPrefs.edit();
 
 		if (requestCode == CONTACT_PICKER_RESULT) {
 			try {
@@ -124,7 +180,7 @@ public class Preferences extends PreferenceFragment implements OnPreferenceClick
 					Log.i("Prefs", "Cursor empty, no results");
 				}
 			} catch (Exception e) {
-				Log.e("Prefs ExceptionE", "Error getting contact data", e);
+				Log.e("Prefs ExceptionE", "Error getting contact data, possibly cancelled", e);
 			} finally {
 				if (cursor != null) {
 					cursor.close();
@@ -134,16 +190,16 @@ public class Preferences extends PreferenceFragment implements OnPreferenceClick
 
 	}
 
+	//
 	private ArrayList<String> logAllContacts() {
 		// TODO Auto-generated method stub
 		ArrayList<String> contactsList = new ArrayList<String>();
-		SharedPreferences mySharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
 		mySharedPrefs.registerOnSharedPreferenceChangeListener(this);
 		Map<String,?> prefString = (Map<String, ?>) mySharedPrefs.getAll();
 
 		for(Map.Entry<String,?> entry : prefString.entrySet()){
-			//			Log.d("contacts in sharedprefs= ",entry.getKey() + ": " + 
-			//					entry.getValue().toString());   
+
 			String name =  entry.getValue().toString();
 			String number = entry.getKey().toString();
 
@@ -179,12 +235,15 @@ public class Preferences extends PreferenceFragment implements OnPreferenceClick
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
 		// TODO Auto-generated method stub
-		
+
 		preference = findPreference("contact_pref");
 		preference.setSummary(logAllContacts().toString());
-		
-		
-	}
 
+		preference.setSummary(logAllContacts().toString().replace("[", "").replace("]", "").replace(",", "\n"));
+		if(logAllContacts().toString().equalsIgnoreCase("[]")){
+			preference.setSummary("No contacts saved");
+		}
+
+	}
 
 }

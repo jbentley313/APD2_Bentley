@@ -24,9 +24,10 @@
             android:icon="@drawable/ic_action_alerts_and_states_warning"
             android:key="contact_pref"
             android:summary="No contacts saved"
-            android:title="Emergency Contacts" />
-        
-        
+            android:title="Add Emergency Contacts" />
+        <Preference
+            android:key="del_con"
+            android:summary="Delete All Emergency Contacts" />
     </PreferenceCategory>
 
 </PreferenceScreen>

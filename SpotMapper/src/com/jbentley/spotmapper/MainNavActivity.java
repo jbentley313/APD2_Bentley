@@ -21,11 +21,8 @@ import java.util.Locale;
 import java.util.Map;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationClient;
-import com.google.android.gms.location.LocationClient.OnAddGeofencesResultListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -35,7 +32,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.jbentley.spotmapper.LocationDialogFragment.LocationDialogFragmentListener;
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -58,15 +54,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class MainNavActivity extends FragmentActivity implements  android.location.LocationListener, LocationDialogFragmentListener, ConnectionCallbacks,
-OnConnectionFailedListener,OnAddGeofencesResultListener{
+public class MainNavActivity extends FragmentActivity implements  android.location.LocationListener, LocationDialogFragmentListener 
+{
 	private static final String Tag = "[X][X] MainNavActivity ";
 	MenuItem settingsIcon;
 	MenuItem addNavIcon;
@@ -78,6 +71,7 @@ OnConnectionFailedListener,OnAddGeofencesResultListener{
 	List<Address> addresses;
 	TextView addressTextResults;
 	static final int GOOGLE_SERVICES_RESULT = 9000;
+	private static final REQUEST_TYPE ADD = null;
 	private SingleGeoFence singleGeoFence;
 	private SingleGeoFenceStore singleGeoStore;
 	final String LAT_KEY = "latitudeKey";
@@ -87,10 +81,12 @@ OnConnectionFailedListener,OnAddGeofencesResultListener{
 	final String EXPIRATION_KEY = "expirationKey";
 	private LocationClient mLocationClient;
 	private PendingIntent mGeofenceRequestIntent;
-	
-	private REQUEST_TYPE mRequestType;
+	List<Geofence> mCurrentGeofences;
+	List<Geofence> mGeofenceList;
+	SharedPreferences mySharedPrefs;
+	SharedPreferences mySharedPrefs2Geo;
+	private REQUEST_TYPE  mRequestType;
 	public enum REQUEST_TYPE  {ADD, REMOVE};
-
 	private boolean mInProgress;
 
 
@@ -111,12 +107,15 @@ OnConnectionFailedListener,OnAddGeofencesResultListener{
 		//request flag for geofences set to false
 		mInProgress = false;
 
+		mCurrentGeofences = new ArrayList<Geofence>();
+		mGeofenceList = new ArrayList<Geofence>();
+
 		//start location listen
 		startLocationListen();
 
-		SharedPreferences mySharedPrefs2 = this.getSharedPreferences("mySharedGeoPrefs", Context.MODE_PRIVATE);
-
-		Map<String,?> keys = mySharedPrefs2.getAll();
+		mySharedPrefs2Geo = this.getSharedPreferences("mySharedGeoPrefs", Context.MODE_PRIVATE);
+		mySharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		Map<String,?> keys = mySharedPrefs2Geo.getAll();
 
 		for(Map.Entry<String,?> entry : keys.entrySet()){
 			Log.i("map values",entry.getKey() + ": " + 
@@ -144,12 +143,18 @@ OnConnectionFailedListener,OnAddGeofencesResultListener{
 		// TODO Auto-generated method stub
 
 		int itemId = item.getItemId();
+
+		//settings icon
 		if (itemId == R.id.settingsIcon) {
 			Intent settingsIntent = new Intent (this, PreferenceDisplayActivity.class);
 			startActivity(settingsIntent);
+
+			//add nav icon
 		} else if (itemId == R.id.addNavIcon) {
 			Log.i(Tag, "addNav");
 			saveLocation();
+
+			//emergency icon
 		} else if (itemId == R.id.emergencyIcon){
 
 			new AlertDialog.Builder(this)
@@ -159,7 +164,8 @@ OnConnectionFailedListener,OnAddGeofencesResultListener{
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
+
+					//send message out to contacts
 					sendMessagetoContacts();
 				}
 			})
@@ -173,11 +179,11 @@ OnConnectionFailedListener,OnAddGeofencesResultListener{
 
 	}
 
+	//send message to contacts
 	private void sendMessagetoContacts() {
 
 		ArrayList<String> contactsList = new ArrayList<String>();
 		SharedPreferences mySharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-
 
 		//geocoder to get address based on location
 		Geocoder geocoder = new Geocoder(this, Locale.getDefault());
@@ -202,7 +208,6 @@ OnConnectionFailedListener,OnAddGeofencesResultListener{
 			// TODO Auto-generated catch block
 			Log.e(Tag, e.getMessage().toString());
 		}
-
 
 		Map<String,?> prefString = (Map<String, ?>) mySharedPrefs.getAll();
 
@@ -233,16 +238,24 @@ OnConnectionFailedListener,OnAddGeofencesResultListener{
 				Log.i("contact list", nameOfContact + ": " + numberOfContactFormatted);
 				contactsList.add(nameOfContact + ": " + numberOfContactFormatted);
 
+				//make link to location on google map
 				String linkToMySavedLoc = "http://maps.google.com/maps?q=loc:" + myLoc.latitude + "," + myLoc.longitude;
 
+				//nearest address
 				String addressFormatted = addressTextResults.getText().toString();
-				Log.i("addFORM", addressFormatted);
 
+				//set address to 'unavailable' if null
+				if(addressFormatted == null)
+				{addressFormatted = "Unavailable";
+				}
+
+				//out going message string
 				String outGoingMessage = "TEST!!!!.  My location: " +
 						linkToMySavedLoc + ". " + "Nearest address: " + addressFormatted  + "." ;
 
 				Log.i("SMS", numberOfContactFormatted);
 
+				//send sms
 				android.telephony.SmsManager smsMgr =  android.telephony.SmsManager.getDefault();
 				smsMgr.sendTextMessage(numberOfContactFormatted, null, outGoingMessage, null, null);
 			}
@@ -285,30 +298,34 @@ OnConnectionFailedListener,OnAddGeofencesResultListener{
 			singleGeoStore.setGeoFence(locNameText, singleGeoFence);
 
 
-			//geofence create
+			mGeofenceList.add(singleGeoFence.makeGeoFence());
+
+			//			addGeofences();
+
+
 
 		} else {
 			geoDisplay = "Not tagged for Geofence";
 		}
 
-		//add map marker
-		Marker savedLocMarker = mMap.addMarker(new MarkerOptions()
-		.position(myLoc)
-		.title(locNameText)
-		.snippet(geoDisplay));
-
-		savedLocMarker.showInfoWindow();
-
-		//Split the lat and long into two strings that are saved on the db
-		Double latDouble = myLoc.latitude;
-		Double longDouble = myLoc.longitude;
-		String latString = latDouble.toString();
-		String longString = longDouble.toString();
-		String savedDateAndTime = getCurrentTime();
-
 
 		if (!locNameText.isEmpty()) {
-			Log.i("NO", "not empty");
+			//add map marker
+			Marker savedLocMarker = mMap.addMarker(new MarkerOptions()
+			.position(myLoc)
+			.title(locNameText));
+			
+
+			savedLocMarker.showInfoWindow();
+
+			//Split the lat and long into two strings that are saved on the db
+			Double latDouble = myLoc.latitude;
+			Double longDouble = myLoc.longitude;
+			String latString = latDouble.toString();
+			String longString = longDouble.toString();
+			String savedDateAndTime = getCurrentTime();
+
+
 			//add location to the database
 			locDb.addLocationtoDB(new LocationInfo(locNameText, latString, longString, isTaggedForGeo, savedDateAndTime));
 
@@ -515,68 +532,104 @@ OnConnectionFailedListener,OnAddGeofencesResultListener{
 
 
 
-	public void setGeofence(String id, SingleGeoFence geofence){
+	//	public void setGeofence(String id, SingleGeoFence geofence){
+	//
+	//
+	//
+	//	}
+
+
+	//pending intent to trigger intent service when transition is entered
+	//	private PendingIntent getTransitionPendingIntent(){
+	//
+	//		Intent intent = new Intent(getApplicationContext(), TransistionReceivedIntentService.class);
+	//
+	//		return PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+	//
+	//	}
 
 
 
-	}
+	//	@Override
+	//	public void onConnectionFailed(ConnectionResult arg0) {
+	//		// TODO Auto-generated method stub
+	//
+	//	}
+
+	//	@Override
+	//	public void onAddGeofencesResult(int arg0, String[] arg1) {
+	//		// TODO Auto-generated method stub
+	//
+	//		if (LocationStatusCodes.SUCCESS == arg0) {
+	//			Log.d("ADDED GEOFENCE RESULT", "SUCCESS!!");
+	//		} else {
+	//			Log.d("ADDED GEOFENCE RESULT", "FAIL!!");
+	//		}
+	//		// Turn off the in progress flag and disconnect the client
+	//		mInProgress = false;
+	//		mLocationClient.disconnect();
+	//
+	//	}
+
+	//	@Override
+	//	public void onConnected(Bundle arg0) {
+	//		// TODO Auto-generated method stub
+	//		Log.d("onCOnnercted", "connected!");
+	//		switch (mRequestType) {
+	//		case ADD :
+	//			// Get the PendingIntent for the request
+	//			PendingIntent mTransitionPendingIntent =
+	//			getTransitionPendingIntent();
+	//			// Send a request to add the current geofences
+	//			mLocationClient.addGeofences(
+	//					mCurrentGeofences, mTransitionPendingIntent, this);
+	//			break;
+	//		case REMOVE:
+	//			break;
+	//		default:
+	//			break;
+	//		}
 
 
-//	//pending intent to trigger intent service when transition is entered
-//	private PendingIntent getTransitionPendingIntent(){
-//
-//		Intent intent = new Intent(this, TransistionReceivedIntentService.class);
-//
-//		return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//	}
+
+	//}
+	//
+	//@Override
+	//public void onConnectionSuspended(int arg0) {
+	//	// TODO Auto-generated method stub
+	//
+	//}
+
+	//public void addGeofences() {
+	//
+	//	mRequestType = ADD;
+	//
+	//	if (!googleServiceAvailable()) {
+	//		return;
+	//	}
+	//
+	//	mLocationClient = new LocationClient(this, this, this);
+	//	// If a request is not already underway
+	//
+	//	if (!mInProgress) {
+	//
+	//		// Indicate that a request is underway
+	//		mInProgress = true;
+	//
+	//		//request a connection 
+	//		mLocationClient.connect();
+	//	} else {
+	//		Log.d("mInprogress", "is true :(");
+	//	}
+	//}
+	//
+	//@Override
+	//public void onDisconnected() {
+	//	// TODO Auto-generated method stub
+	//
+	//}
 
 
-	
-	@Override
-	public void onConnectionFailed(ConnectionResult arg0) {
-		// TODO Auto-generated method stub
 
-	}
 
-	@Override
-	public void onAddGeofencesResult(int arg0, String[] arg1) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onConnected(Bundle arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onConnectionSuspended(int arg0) {
-		// TODO Auto-generated method stub
-
-	}
-	
-	public void addGeofences() {
-        
-        if (!googleServiceAvailable()) {
-            return;
-        }
-        
-        mLocationClient = new LocationClient(this, (com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks) this, this);
-        // If a request is not already underway
-        
-        if (!mInProgress) {
-        	
-            // Indicate that a request is underway
-            mInProgress = true;
-            
-            //request a connection 
-            mLocationClient.connect();
-        } else {
-            
-        }
-    }
-
-	
-	
 }

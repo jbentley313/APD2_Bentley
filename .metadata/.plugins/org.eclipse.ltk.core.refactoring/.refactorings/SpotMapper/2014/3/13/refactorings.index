@@ -8,3 +8,4 @@
 1395797468011	Rename compilation unit 'TransistionRecievedIntentSevice.java'
 1395797572327	Rename compilation unit 'TransistionReceivedIntentSevice.java'
 1395803318605	Extracts string 'share location' into R.string.share_location
+1395891606310	Extracts string 'delecontacts' into R.string.delecontacts

@@ -74,11 +74,7 @@ public class ListNavFragment extends ListFragment implements OnItemLongClickList
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
 				android.R.layout.simple_list_item_1, allLocInfo);
 
-
-
 		setListAdapter(adapter);
-
-
 
 	}
 
@@ -87,10 +83,7 @@ public class ListNavFragment extends ListFragment implements OnItemLongClickList
 		// TODO Auto-generated method stub
 		super.onAttach(activity);
 
-
-
 	}
-
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -107,10 +100,6 @@ public class ListNavFragment extends ListFragment implements OnItemLongClickList
 		// TODO Auto-generated method stub
 		super.onListItemClick(l, v, position, id);
 
-
-
-
-		Log.i("LISTCLICK", String.valueOf(position + 1));
 		Intent mapNavIntent = new Intent(getActivity(), SavedSpotNavigation.class);
 		String locName = l.getItemAtPosition(position).toString();
 
@@ -170,17 +159,10 @@ public class ListNavFragment extends ListFragment implements OnItemLongClickList
 
 				dbhelp.deleteLocationFromDB(singleLoc.getId());
 				
-				
-				
 				LocationDataBaseHelper dbhelp2 = new LocationDataBaseHelper(getActivity().getApplicationContext());	
 				int locLength = dbhelp2.getAllLocs().size();
 				Log.i("size", String.valueOf(locLength));
 				
-				if(position == locLength){
-						Intent intent =  new Intent(getActivity(), MainNavActivity.class);
-						startActivity(intent);
-				}
-
 				init(getView());
 
 				SharedPreferences mySharedPrefs2 = getActivity().getSharedPreferences("mySharedGeoPrefs", Context.MODE_PRIVATE);
@@ -199,11 +181,6 @@ public class ListNavFragment extends ListFragment implements OnItemLongClickList
 		.setNegativeButton("Cancel", null)
 		.show();
 
-
 	}
-
-
-
-
 
 }

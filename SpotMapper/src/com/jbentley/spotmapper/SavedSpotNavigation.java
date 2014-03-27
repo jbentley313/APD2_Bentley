@@ -139,8 +139,7 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 			//add map marker
 			Marker savedLocMarker = mMapS.addMarker(new MarkerOptions()
 			.position(mySavedLoc)
-			.title(nameLoc)
-			.snippet(geoDisplay));
+			.title(nameLoc));
 
 			savedLocMarker.showInfoWindow();
 
@@ -193,41 +192,9 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 
 			deleteLocaton();
 
-			//share location
+			
 		} 
-		//				else if(itemId == R.id.shareIcon) {
-		//					//map location coordinates string
-		//					String linkToMySavedLoc = "http://maps.google.com/maps?q=loc:" + mySavedLoc.latitude + "," + mySavedLoc.longitude;
-		//					Intent shareIntent = ShareCompat.IntentBuilder.from(this).setText("I'm sharing the location of " + "\"" + nameLoc + "\"" + " via Spot Mapper!" + "\n" +
-		//							linkToMySavedLoc)
-		//							.setSubject("See the location I shared with you on Spot Mapper!")
-		//							.setType("text/plain").getIntent();
-		//					
-		//					
-		//					startActivity(shareIntent);
-		//				}
-		//
-		//				String linkToMySavedLoc = "http://maps.google.com/maps?q=loc:" + mySavedLoc.latitude + "," + mySavedLoc.longitude;
-		//				Intent shareIntent = new Intent(Intent.ACTION_SEND).putExtra(Intent.EXTRA_TEXT,"I'm sharing the location of " + "\"" + nameLoc + "\"" + " via Spot Mapper!" + "\n" +
-		//						linkToMySavedLoc)
-		//						.putExtra(Intent.EXTRA_SUBJECT, "See the location I shared with you on Spot Mapper!")
-		//						.setType("text/plain");
-		//		
-		//				shareActionProvider =  (ShareActionProvider) MenuItemCompat.getActionProvider(shareIcon);
-		//				shareActionProvider.setShareIntent(shareIntent);
-
-		//				else if(itemId == R.id.actionshare) {
-		//							//map location coordinates string
-		//							String linkToMySavedLoc = "http://maps.google.com/maps?q=loc:" + mySavedLoc.latitude + "," + mySavedLoc.longitude;
-		//							Intent shareIntents = new Intent (Intent.ACTION_SEND).putExtra(Intent.EXTRA_TEXT,"I'm sharing the location of " + "\"" + nameLoc + "\"" + " via Spot Mapper!" + "\n" +
-		//									linkToMySavedLoc)
-		//									.putExtra(Intent.EXTRA_SUBJECT,"See the location I shared with you on Spot Mapper!")
-		//									.setType("text/plain");
-		//							Intent shareIntent = Intent.createChooser(shareIntents, "share");
-		//							
-		//							
-		//							startActivity(shareIntent);
-		//						}
+					
 
 		//compass icon
 		if(itemId == R.id.compassIcon) {
