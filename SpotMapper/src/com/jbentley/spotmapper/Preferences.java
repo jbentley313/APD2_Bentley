@@ -1,3 +1,15 @@
+/*
+ *Author: Jason Bentley
+ * 
+ * Mar 27, 2014
+ * 
+ * Project = SpotMapper
+ * 
+ * Package = com.jbentley.spotmapper
+ * 
+ * Preferences.java is a PreferenceFragment that displays settings.  This allows the user to change SharedPreferences such as
+ * map type, and add or remove emergency contacts
+ */
 package com.jbentley.spotmapper;
 
 import java.util.ArrayList;

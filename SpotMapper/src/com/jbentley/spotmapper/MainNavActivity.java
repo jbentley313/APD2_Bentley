@@ -1,15 +1,18 @@
 /*
  *Author: Jason Bentley
  * 
- * Mar 13, 2014
+ * Mar 27, 2014
  * 
  * Project = SpotMapper
  * 
  * Package = com.jbentley.spotmapper
  * 
  * 
- * MainNavActivity is the main class for the application "Spot Mapper."  This activity shows a GoogleMap with the current 
- * device location.  A listview will be implemented for Milestone 2 to display saved locations.
+ * MainNavActivity.java serves as the main activity for the app SpotMapper.  The UI allows the user to name and save the current location.
+ * A listview fragment on the bottom half displays any saved locations from the database.  When the user clicks an item in the
+ * listview, they are taken to SavedSpotNavigation activity where they can see and navigate to the saved location on a Google Map.  The Alert (emergency)
+ * icon allows a user to quickly send an emergency message containing current location info to contacts that are saved in preferences. 
+ * 
  */
 package com.jbentley.spotmapper;
 import java.io.IOException;
@@ -22,7 +25,6 @@ import java.util.Map;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.Geofence;
-import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -76,7 +78,7 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 	List<Address> addresses;
 	TextView addressTextResults;
 	static final int GOOGLE_SERVICES_RESULT = 9000;
-	private static final REQUEST_TYPE ADD = null;
+	
 	private SingleGeoFence singleGeoFence;
 	private SingleGeoFenceStore singleGeoStore;
 	final String LAT_KEY = "latitudeKey";
@@ -84,17 +86,20 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 	final String RADIUS_KEY = "radiusKey";
 	final String TRANSITION_KEY = "transitionKey";
 	final String EXPIRATION_KEY = "expirationKey";
-	private LocationClient mLocationClient;
-	private PendingIntent mGeofenceRequestIntent;
+	
 	List<Geofence> mCurrentGeofences;
 	List<Geofence> mGeofenceList;
 	SharedPreferences mySharedPrefs;
 	SharedPreferences mySharedPrefs2Geo;
-	private REQUEST_TYPE  mRequestType;
-	public enum REQUEST_TYPE  {ADD, REMOVE};
-	private boolean mInProgress;
-	BroadcastReceiver smsSentBCReceiver; 
-
+	BroadcastReceiver smsSentBCReceiver;
+	
+	//geofence variables for future implementation
+//	private boolean mInProgress;
+//	private LocationClient mLocationClient;
+//	private PendingIntent mGeofenceRequestIntent;
+//	private static final REQUEST_TYPE ADD = null;
+//	private REQUEST_TYPE  mRequestType;
+//	public enum REQUEST_TYPE  {ADD, REMOVE};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -105,35 +110,34 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayShowHomeEnabled(true);
 
-
+		//location service manager
 		locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
+		//Textview holder for address that gets sent in emergency
 		addressTextResults = (TextView) findViewById(R.id.resultTextAddress);
 
-		//request flag for geofences set to false
-		mInProgress = false;
-
+		//list holders for future geofence implementation
 		mCurrentGeofences = new ArrayList<Geofence>();
 		mGeofenceList = new ArrayList<Geofence>();
 
 		//start location listen
 		startLocationListen();
 
+		//shared preferences for geofence storage
 		mySharedPrefs2Geo = this.getSharedPreferences("mySharedGeoPrefs", Context.MODE_PRIVATE);
+		
+		//shared preferences for default shared prefs
 		mySharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		Map<String,?> keys = mySharedPrefs2Geo.getAll();
 
+		//log map values
 		for(Map.Entry<String,?> entry : keys.entrySet()){
 			Log.i("map values",entry.getKey() + ": " + 
 					entry.getValue().toString());            
 		}
-
-
-
-
-
 	}
 
+	//options menu on create
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu items for use in the action bar
@@ -146,6 +150,7 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 		return true;
 	}
 
+	//options menu onOptions selected
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
@@ -187,7 +192,7 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 
 	}
 
-	//send message to contacts
+	//send sms message to contacts
 	private void sendMessagetoContacts() {
 
 		ArrayList<String> contactsList = new ArrayList<String>();
@@ -316,7 +321,7 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 
 			mGeofenceList.add(singleGeoFence.makeGeoFence());
 
-			//			addGeofences();
+			
 
 
 
@@ -330,7 +335,7 @@ public class MainNavActivity extends FragmentActivity implements  android.locati
 			Marker savedLocMarker = mMap.addMarker(new MarkerOptions()
 			.position(myLoc)
 			.title(locNameText));
-
+			//add snipit in future release to show tagged for geo geoDisplay
 
 			savedLocMarker.showInfoWindow();
 

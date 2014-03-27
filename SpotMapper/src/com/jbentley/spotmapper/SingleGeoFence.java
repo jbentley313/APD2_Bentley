@@ -1,8 +1,17 @@
+/*
+ *Author: Jason Bentley
+ * 
+ * Mar 27, 2014
+ * 
+ * Project = SpotMapper
+ * 
+ * Package = com.jbentley.spotmapper
+ * 
+ * 
+ * SingleGeoFence.java is a custom class for a single geo fence.
+ */
 package com.jbentley.spotmapper;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
 import com.google.android.gms.location.Geofence;

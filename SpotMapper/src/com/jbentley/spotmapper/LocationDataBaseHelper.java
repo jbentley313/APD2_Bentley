@@ -1,14 +1,14 @@
 /*
  *Author: Jason Bentley
  * 
- * Mar 13, 2014
+ * Mar 27, 2014
  * 
  * Project = SpotMapper
  * 
  * Package = com.jbentley.spotmapper
  * 
- * 
- * LocationDataBaseHelper extends SQLiteOpenHelper to store location information internally to the device.
+ * LocationDataBaseHelper.java is an SQLite Database the extends SQLiteOpenHelper.  The database stores location info such as
+ * latitude, longitude, creating date, id, and name.
  */
 package com.jbentley.spotmapper;
 

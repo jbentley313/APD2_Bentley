@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="android.telephony.SmsManager"/>
-<fullyQualifiedTypeName name="android.app.AlertDialog"/>
-<fullyQualifiedTypeName name="android.app.AlertDialog.Builder"/>
-<fullyQualifiedTypeName name="android.content.DialogInterface"/>
-<fullyQualifiedTypeName name="android.content.DialogInterface.OnClickListener"/>
-<fullyQualifiedTypeName name="android.location.Geocoder"/>
-<fullyQualifiedTypeName name="android.location.Address"/>
-<fullyQualifiedTypeName name="java.io.IOException"/>
 <fullyQualifiedTypeName name="java.lang.Object"/>
 <fullyQualifiedTypeName name="android.widget.TextView"/>
 <fullyQualifiedTypeName name="com.jbentley.spotmapper.R.id"/>
 <fullyQualifiedTypeName name="android.app.DialogFragment"/>
 <fullyQualifiedTypeName name="android.text.GetChars"/>
-<fullyQualifiedTypeName name="android.app.Activity"/>
 <fullyQualifiedTypeName name="com.google.android.gms.common.GooglePlayServicesUtil"/>
 <fullyQualifiedTypeName name="com.google.android.gms.internal.go"/>
 <fullyQualifiedTypeName name="android.app.Dialog"/>
@@ -22,7 +13,6 @@
 <fullyQualifiedTypeName name="com.google.android.gms.common.ConnectionResult"/>
 <fullyQualifiedTypeName name="com.google.android.gms.location.Geofence.Builder"/>
 <fullyQualifiedTypeName name="java.util.Map"/>
-<fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="android.preference.PreferenceManager"/>
 <fullyQualifiedTypeName name="android.content.SharedPreferences"/>
 <fullyQualifiedTypeName name="com.jbentley.spotmapper.SingleGeoFence"/>
@@ -30,7 +20,6 @@
 <fullyQualifiedTypeName name="com.jbentley.spotmapper.TransistionReceivedIntentSevice"/>
 <fullyQualifiedTypeName name="android.app.IntentService"/>
 <fullyQualifiedTypeName name="com.google.android.gms.location.Geofence"/>
-<fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="android.content.Intent"/>
 <fullyQualifiedTypeName name="com.jbentley.spotmapper.TransistionReceivedIntentService"/>
 <fullyQualifiedTypeName name="com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks"/>
@@ -60,4 +49,15 @@
 <fullyQualifiedTypeName name="com.google.android.gms.maps.GoogleMap"/>
 <fullyQualifiedTypeName name="android.util.Log"/>
 <fullyQualifiedTypeName name="android.content.SharedPreferences.Editor"/>
+<fullyQualifiedTypeName name="android.support.v4.content.LocalBroadcastManager"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="com.google.android.gms.location.LocationStatusCodes"/>
+<fullyQualifiedTypeName name="android.preference.Preference"/>
+<fullyQualifiedTypeName name="android.app.Activity"/>
+<fullyQualifiedTypeName name="android.content.BroadcastReceiver"/>
+<fullyQualifiedTypeName name="android.widget.Toast"/>
+<fullyQualifiedTypeName name="android.telephony.SmsManager"/>
+<fullyQualifiedTypeName name="android.content.IntentFilter"/>
+<fullyQualifiedTypeName name="android.provider.Telephony.Sms"/>
 </qualifiedTypeNameHistroy>

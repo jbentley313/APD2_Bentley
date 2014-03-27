@@ -1,3 +1,12 @@
+/*
+ *Author: Jason Bentley
+ * 
+ * Mar 27, 2014
+ * 
+ * Project = SpotMapper
+ * 
+ * Package = com.jbentley.spotmapper
+ */
 package com.jbentley.spotmapper;
 
 import android.app.Activity;

@@ -1,3 +1,16 @@
+/*
+ *Author: Jason Bentley
+ * 
+ * Mar 27, 2014
+ * 
+ * Project = SpotMapper
+ * 
+ * Package = com.jbentley.spotmapper
+ * 
+ * 
+ * ListNavFragment.java is a ListFragment that displays a list with saved locations.  Selecting items on this list will
+ * take the user to SavedSpotNavigation activity.
+ */
 package com.jbentley.spotmapper;
 
 import java.util.ArrayList;
@@ -12,7 +25,6 @@ import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,10 +33,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-
-import com.google.android.gms.maps.GoogleMap;
 import com.jbentley.spotmapper.LocationDataBaseHelper;
 
 public class ListNavFragment extends ListFragment implements OnItemLongClickListener{

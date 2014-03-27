@@ -1,14 +1,11 @@
 /*
  *Author: Jason Bentley
  * 
- * Mar 13, 2014
+ * Mar 27, 2014
  * 
  * Project = SpotMapper
  * 
  * Package = com.jbentley.spotmapper
- * 
- * 
- * LocationInfo is a custom Java object to help with saving and reading location objects (LocationInfo)
  */
 package com.jbentley.spotmapper;
 import android.util.Log;

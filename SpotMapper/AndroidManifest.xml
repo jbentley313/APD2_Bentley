@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="16"
+        android:minSdkVersion="14"
         android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -24,7 +24,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.jbentley.spotmapper.MainNavActivity"
-            android:label="Spot Mapper" >
+            android:label="Spot Mapper"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,3 +1,14 @@
+/*
+ *Author: Jason Bentley
+ * 
+ * Mar 27, 2014
+ * 
+ * Project = SpotMapper
+ * 
+ * Package = com.jbentley.spotmapper
+ * 
+ * SingleGeoFenceStore.java allows a single geofence to be stored to SharedPreferenes.
+ */
 package com.jbentley.spotmapper;
 
 import android.content.Context;

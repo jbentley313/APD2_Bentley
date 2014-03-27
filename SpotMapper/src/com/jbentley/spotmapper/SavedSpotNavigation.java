@@ -1,3 +1,12 @@
+/*
+ *Author: Jason Bentley
+ * 
+ * Mar 27, 2014
+ * 
+ * Project = SpotMapper
+ * 
+ * Package = com.jbentley.spotmapper
+ */
 package com.jbentley.spotmapper;
 
 
@@ -11,8 +20,6 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -29,8 +36,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.MenuItemCompat;
-
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -167,6 +172,7 @@ public class SavedSpotNavigation extends FragmentActivity implements android.loc
 	}
 
 
+	//default intent for sharing location
 	private Intent getDefaultIntent() {
 		// TODO Auto-generated method stub
 		//map location coordinates string

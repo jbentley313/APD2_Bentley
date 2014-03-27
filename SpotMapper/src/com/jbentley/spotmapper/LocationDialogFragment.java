@@ -1,14 +1,15 @@
 /*
  *Author: Jason Bentley
  * 
- * Mar 13, 2014
+ * Mar 27, 2014
  * 
  * Project = SpotMapper
  * 
  * Package = com.jbentley.spotmapper
  * 
  * 
- * LocationDialogFragment is a DialogFragment that allows the user to name a location, as well as flag it for geofencing
+ * LocationDialogFragment.java is a DialogFragment that displays an Edittext for naming the saved location.  There is also a checkbox for future
+ * When the user clicks 'save', the name of the location, as well as location info, is saved to a SQLite Database.
  */
 package com.jbentley.spotmapper;
 
