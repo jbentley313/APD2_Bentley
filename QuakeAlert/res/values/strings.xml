@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Quake Alert!</string>
+    <string name="action_settings">Settings</string>
+
+    <string-array name="magArray">
+        <item>All Recent Quakes</item>
+        <item>1.0+</item>
+        <item>2.5+</item>
+        <item>4.5+</item>
+    </string-array>
+
+    <string name="latest_eathquakes">Loading Latest Earthquakes...</string>
+    <string name="magnitude">Magnitude</string>
+    <string name="place">Location</string>
+    <string name="display_the_latest_quakes_by_magnitude">Display the latest quakes by magnitude</string>
+    <string name="time">Time</string>
+    <string name="title_activity_map_quake">MapQuakeActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="search_earthquake_locations">Search Earthquake Locations</string>
+    <string name="search">Search</string>
+    <string name="mapquakeact">MapQuakeAct</string>
+    <string name="loc_data">Loc data</string>
+    <string name="back">back</string>
+    <string name="learn_about_earthquake_safety">Learn about Earthquake Safety</string>
+
+</resources>
