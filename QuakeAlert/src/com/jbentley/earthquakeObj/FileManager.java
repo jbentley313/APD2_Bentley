@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 /**
  * The Class FileManager is a singleton class that contains functions that write
@@ -18,7 +19,7 @@ import android.util.Log;
  */
 public class FileManager {
 	private static FileManager _instance;
-
+	
 	/**
 	 * Instantiates a new file manager.
 	 */
@@ -45,6 +46,7 @@ public class FileManager {
 	public Boolean writeStringFile(Context context, String filename,
 			String content) {
 		Boolean dataResult = false;
+		
 
 		FileOutputStream fos = null;
 		try {
@@ -58,6 +60,7 @@ public class FileManager {
 
 		Log.i("FileManager", "Saved!!!");
 
+		
 		return dataResult;
 	}
 

@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="java.lang.Object"/>
-<fullyQualifiedTypeName name="android.widget.TextView"/>
-<fullyQualifiedTypeName name="com.jbentley.spotmapper.R.id"/>
 <fullyQualifiedTypeName name="android.app.DialogFragment"/>
 <fullyQualifiedTypeName name="android.text.GetChars"/>
 <fullyQualifiedTypeName name="com.google.android.gms.common.GooglePlayServicesUtil"/>
@@ -60,4 +57,7 @@
 <fullyQualifiedTypeName name="android.telephony.SmsManager"/>
 <fullyQualifiedTypeName name="android.content.IntentFilter"/>
 <fullyQualifiedTypeName name="android.provider.Telephony.Sms"/>
+<fullyQualifiedTypeName name="com.google.android.gms.maps.model.CircleOptions"/>
+<fullyQualifiedTypeName name="com.google.android.gms.maps.model.Circle"/>
+<fullyQualifiedTypeName name="com.jbentley.earthquake.R.id"/>
 </qualifiedTypeNameHistroy>

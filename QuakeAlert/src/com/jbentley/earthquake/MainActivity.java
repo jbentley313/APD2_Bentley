@@ -22,6 +22,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -75,6 +77,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 				// save the response to the filemanager
 				fileManager.writeStringFile(mContext, fileName, response);
 
+
 			}
 		}
 	}
@@ -94,6 +97,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 	Uri displayURI;
 	// ArrayList<HashMap<String, String, String>> myQuakeList;
 	ArrayList<HashMap<String, String>> myQuakeList;
+	SimpleAdapter mySimpleAdapter;
 
 	/*
 	 * (non-Javadoc)
@@ -213,63 +217,63 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 		connectivityClass initialConnectionCheck = new connectivityClass();
 		mContext = this;
 
-//		if (savedInstanceState != null) {
-//			// Toast.makeText(mContext, "THERE IS A SAVED INSTANCE!",
-//			// Toast.LENGTH_SHORT).show();
-//			myQuakeList = (ArrayList<HashMap<String, String>>) savedInstanceState
-//					.getSerializable("saved");
-//
-//			if (myQuakeList != null) {
-//
-//				// adapter to display saved serialized data on the listview
-//				SimpleAdapter mySimpleAdapter = new SimpleAdapter(mContext,
-//						myQuakeList, R.layout.quake_list_row, new String[] {
-//								"magnitude", "time", "place" },
-//						new int[] { R.id.locMag, R.id.locTime,
-//								R.id.locDescription });
-//
-//				listviewQuakes.setAdapter(mySimpleAdapter);
-//
-//				// set listener for spinner
-//				magSpinner.setOnItemSelectedListener(this);
-//			} else {
-//				Log.d("MAIN", "myQuakeList is Null");
-//			}
-//
-//			// if there is no saved instance, go get data and display it
-//		} else {
+		//		if (savedInstanceState != null) {
+		//			// Toast.makeText(mContext, "THERE IS A SAVED INSTANCE!",
+		//			// Toast.LENGTH_SHORT).show();
+		//			myQuakeList = (ArrayList<HashMap<String, String>>) savedInstanceState
+		//					.getSerializable("saved");
+		//
+		//			if (myQuakeList != null) {
+		//
+		//				// adapter to display saved serialized data on the listview
+		//				SimpleAdapter mySimpleAdapter = new SimpleAdapter(mContext,
+		//						myQuakeList, R.layout.quake_list_row, new String[] {
+		//								"magnitude", "time", "place" },
+		//						new int[] { R.id.locMag, R.id.locTime,
+		//								R.id.locDescription });
+		//
+		//				listviewQuakes.setAdapter(mySimpleAdapter);
+		//
+		//				// set listener for spinner
+		//				magSpinner.setOnItemSelectedListener(this);
+		//			} else {
+		//				Log.d("MAIN", "myQuakeList is Null");
+		//			}
+		//
+		//			// if there is no saved instance, go get data and display it
+		//		} else {
 
-			// create instance of filemanager
-			fileManager = FileManager.getInstance();
+		// create instance of filemanager
+		fileManager = FileManager.getInstance();
 
-			// set listener for spinner
-			magSpinner.setOnItemSelectedListener(this);
+		// set listener for spinner
+		magSpinner.setOnItemSelectedListener(this);
 
-			// handler for QuakeDownloadService
-			final Handler quakeDownloadHandler = new HandlerExtension();
+		// handler for QuakeDownloadService
+		final Handler quakeDownloadHandler = new HandlerExtension();
 
-			passedMagString = "All Recent Quakes";
-			Log.i("OnSpinnerSelected", passedMagString);
-			Messenger quakeMessenger = new Messenger(quakeDownloadHandler);
-			String passThisMag = passedMagString;
-			Log.i("MessengerArea", passThisMag);
+		passedMagString = "All Recent Quakes";
+		Log.i("OnSpinnerSelected", passedMagString);
+		Messenger quakeMessenger = new Messenger(quakeDownloadHandler);
+		String passThisMag = passedMagString;
+		Log.i("MessengerArea", passThisMag);
 
-			// Intent, pass information to QuakeDownloadService
-			Intent startQuakeIntent = new Intent(this,
-					QuakeDownloadService.class);
-			startQuakeIntent.putExtra(QuakeDownloadService.MESSENGER_KEY,
-					quakeMessenger);
-			startQuakeIntent.putExtra(QuakeDownloadService.QUAKEMAG_KEY,
-					passThisMag);
+		// Intent, pass information to QuakeDownloadService
+		Intent startQuakeIntent = new Intent(this,
+				QuakeDownloadService.class);
+		startQuakeIntent.putExtra(QuakeDownloadService.MESSENGER_KEY,
+				quakeMessenger);
+		startQuakeIntent.putExtra(QuakeDownloadService.QUAKEMAG_KEY,
+				passThisMag);
 
-			// start intent if there is a connection
-			if (initialConnectionCheck.connectionStatus(mContext)) {
-				startService(startQuakeIntent);
-			} else {
-				resultText.setText("Please enable a network connection");
-			}
+		// start intent if there is a connection
+		if (initialConnectionCheck.connectionStatus(mContext)) {
+			startService(startQuakeIntent);
+		} else {
+			resultText.setText("Please enable a network connection");
+		}
 
-//		}
+		//		}
 		super.onCreate(savedInstanceState);
 
 	}
@@ -326,6 +330,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 	 */
 	public void displayQuakes(Uri uri) {
 
+
 		// Cursor to get desired data back from an already downloaded file
 		Cursor cursor = getContentResolver().query(uri, null, null, null, null);
 		if (cursor == null) {
@@ -348,7 +353,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 		if (cursor.getCount() == 0) {
 			Toast.makeText(mContext, "No earthquakes match your criteria.",
 					Toast.LENGTH_LONG).show();
-			
+
 		}
 		if (cursor.moveToFirst() == true) {
 
@@ -374,10 +379,10 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 			}
 
 			// adapter to display data on the listview
-			SimpleAdapter mySimpleAdapter = new SimpleAdapter(mContext,
+			mySimpleAdapter = new SimpleAdapter(mContext,
 					myQuakeList, R.layout.quake_list_row, new String[] {
-							"magnitude", "time", "place" }, new int[] {
-							R.id.locMag, R.id.locTime, R.id.locDescription });
+					"magnitude", "time", "place" }, new int[] {
+					R.id.locMag, R.id.locTime, R.id.locDescription });
 
 			listviewQuakes.setAdapter(mySimpleAdapter);
 
@@ -402,25 +407,102 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		
-		
-		
+
+
+
 	}
 
 	//save instance
-//	@Override
-//	protected void onSaveInstanceState(Bundle outState) {
-//		super.onSaveInstanceState(outState);
-//
-//		if (myQuakeList != null && !myQuakeList.isEmpty()) {
-//			outState.putSerializable("saved", (Serializable) myQuakeList);
-//			Log.i(TAG, "Saving Instance State data");
-//			// Log.i(TAG, myQuakeList.toString());
-//		}
-//	}
+	//	@Override
+	//	protected void onSaveInstanceState(Bundle outState) {
+	//		super.onSaveInstanceState(outState);
+	//
+	//		if (myQuakeList != null && !myQuakeList.isEmpty()) {
+	//			outState.putSerializable("saved", (Serializable) myQuakeList);
+	//			Log.i(TAG, "Saving Instance State data");
+	//			// Log.i(TAG, myQuakeList.toString());
+	//		}
+	//	}
 
-	
-	
-	
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.map_quake, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		// TODO Auto-generated method stub
+		int itemId = item.getItemId();
+
+		if(itemId == R.id.action_refresh){
+			// handler for QuakeDownloadService
+			final Handler quakeDownloadHandler = new HandlerExtension();
+
+			String allRecentQuakes = "All Recent Quakes";
+			Log.i("OnSpinnerSelected", allRecentQuakes);
+			Messenger quakeMessenger = new Messenger(quakeDownloadHandler);
+			String passThisMag = allRecentQuakes;
+			Log.i("MessengerArea", passThisMag);
+
+			// Intent, pass information to QuakeDownloadService
+			Intent startQuakeIntent = new Intent(getApplicationContext(),
+					QuakeDownloadService.class);
+			startQuakeIntent.putExtra(QuakeDownloadService.MESSENGER_KEY,
+					quakeMessenger);
+			startQuakeIntent.putExtra(QuakeDownloadService.QUAKEMAG_KEY,
+					passThisMag);
+
+			startService(startQuakeIntent);
+
+
+			// pass URI to provider depending on the selected spinner item
+			//						passedMagString = magString;
+			Log.i("OnSpinnerSelected", passedMagString);
+
+			if (passedMagString.equalsIgnoreCase("4.5+")) {
+				displayURI = Uri
+						.parse("content://com.jbentley.earthquake.QuakeProvider/quakeMag4.5");
+
+			} else if (passedMagString.equalsIgnoreCase("2.5+")) {
+				displayURI = Uri
+						.parse("content://com.jbentley.earthquake.QuakeProvider/quakeMag2.5");
+
+			} else if (passedMagString.equalsIgnoreCase("1.0+")) {
+				displayURI = Uri
+						.parse("content://com.jbentley.earthquake.QuakeProvider/quakeMag1.0");
+
+			} else if (passedMagString.equalsIgnoreCase("All Recent Quakes")) {
+				displayURI = Uri
+						.parse("content://com.jbentley.earthquake.QuakeProvider/allQuakes");
+
+
+			}
+
+
+			final Handler handler = new Handler();
+			handler.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					// Try after 2s = 2000ms
+					Toast.makeText(mContext, "Quakes refreshed!", Toast.LENGTH_LONG).show();
+					
+						
+						displayQuakes(displayURI);
+						mySimpleAdapter.notifyDataSetChanged();
+					
+				}
+			}, 2000);
+
+
+		}
+
+		return false;
+	}
+
+
+
 
 }

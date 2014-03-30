@@ -1,0 +1,16 @@
+package com.jbentley.earthquake;
+
+public class SingleQuake {
+	int _id;
+	String _locationName;
+	String _locationLatitude;
+	String _locationLongitude;
+	Boolean _taggedForGeo;
+	String _savedDateTime;
+
+
+	public SingleQuake(){
+
+	}
+
+}

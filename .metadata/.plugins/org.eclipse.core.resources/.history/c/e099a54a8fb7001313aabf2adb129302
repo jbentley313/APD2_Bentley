@@ -1,0 +1,441 @@
+/*
+ * project     Earthquake (week3)
+ * 
+ * package     com.jbentley.earthquake
+ * 
+ * @author     Jason Bentley
+ * 
+ * date        Nov 7, 2013
+ */
+package com.jbentley.earthquake;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import com.jbentley.connectivityPackage.connectivityClass;
+import com.jbentley.earthquakeObj.FileManager;
+import com.jbentley.earthquakeObj.QuakeDownloadService;
+
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MainActivity.
+ */
+public class MainActivity extends Activity implements OnItemSelectedListener {
+
+	/**
+	 * The Class HandlerExtension gets two args from the service in
+	 * QuakeDownload Service. It receives msg.obj that contains the response
+	 * from a URL from USGS that pulls the latest quake data. This class also
+	 * calls the SAVE function (filemanager.writeStringFile) and calls the
+	 * display function
+	 */
+	private final class HandlerExtension extends Handler {
+
+		// handle the message sent from QuakeDownloadService
+		@Override
+		public void handleMessage(Message msg) {
+
+			String response = null;
+
+			if (msg.arg1 == RESULT_OK && msg.obj != null) {
+
+				try {
+					response = (String) msg.obj;
+				} catch (Exception e) {
+					Log.e("handleMessage", e.getMessage().toString());
+				}
+
+				resultText.setText("");
+
+				// save the response to the filemanager
+				fileManager.writeStringFile(mContext, fileName, response);
+
+			}
+		}
+	}
+
+	Context mContext;
+	ListView listviewQuakes;
+	static String TAG = "MAINACTIVITY";
+	String[] magString;
+	private String passedMagString;
+	private TextView resultText;
+	private TextView topTextView;
+	TextView searchQ;
+	Button searchBtn;
+	Button eqSafetyButton;
+	String fileName = "quakeFile";
+	FileManager fileManager;
+	Uri displayURI;
+	// ArrayList<HashMap<String, String, String>> myQuakeList;
+	ArrayList<HashMap<String, String>> myQuakeList;
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+
+		// //set up views
+		setContentView(R.layout.activity_main);
+		topTextView = (TextView) findViewById(R.id.displayTopText);
+		resultText = (TextView) findViewById(R.id.resultText);
+
+		// listview to display quake data
+		listviewQuakes = (ListView) this.findViewById(R.id.list);
+
+		listviewQuakes.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> adaptView, View arg1,
+					int position, long arg3) {
+				// TODO Auto-generated method stub
+				// String argThree = Long.toString(arg3);
+				// Log.i("CLICKYCLICKY", argThree + argThree);
+
+				Object quakeObj = listviewQuakes.getItemAtPosition(position);
+
+				// String what = quakeObj.toString();
+
+				Log.i(" has", quakeObj.toString());
+
+				// Log.i("ListView Selected item",quakeObj.toString());
+				//
+				//
+				Intent mapIntent = new Intent(mContext, MapQuakeActivity.class);
+				mapIntent.putExtra("quakeObject", (Serializable) quakeObj);
+
+				startActivity(mapIntent, null);
+
+			}
+		});
+
+		// Earthquake safety button
+		Button safetyButton = (Button) findViewById(R.id.eqSafetyButton);
+		safetyButton.setOnClickListener(new OnClickListener() {
+			connectivityClass connectionChecker = new connectivityClass();
+
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (connectionChecker.connectionStatus(mContext)) {
+
+					Intent eqSafetyWebIntent = new Intent(
+							Intent.ACTION_VIEW,
+							Uri.parse("http://www.earthquakecountry.org/sevensteps/"));
+
+					startActivity(eqSafetyWebIntent);
+				} else {
+					Toast.makeText(mContext,
+							"Sorry,  a network connection is required.",
+							Toast.LENGTH_LONG).show();
+					resultText.setText("Please enable a network connection");
+				}
+			}
+		});
+
+		// Spinner and adapter for magnitude
+		magString = getResources().getStringArray(R.array.magArray);
+		Spinner magSpinner = (Spinner) findViewById(R.id.magSpinner);
+
+		// Search equakes text and button
+		searchQ = (EditText) findViewById(R.id.searchQuakes);
+		searchBtn = (Button) findViewById(R.id.searchButton);
+
+		searchBtn.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				connectivityClass connectionChecker = new connectivityClass();
+
+				// TODO Auto-generated method stub
+				InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+				inputManager.hideSoftInputFromWindow(getCurrentFocus()
+						.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
+				if (connectionChecker.connectionStatus(mContext)) {
+					String searchQuakeText = searchQ.getText().toString();
+					// Log.i("Pressed", searchQuakeText.toString());
+					searchQ.setText("");
+
+					displayURI = Uri
+							.parse("content://com.jbentley.earthquake.QuakeProvider/search/"
+									+ searchQuakeText);
+					displayQuakes(displayURI);
+				} else {
+					Toast.makeText(mContext,
+							"Sorry,  a network connection is required.",
+							Toast.LENGTH_LONG).show();
+					resultText.setText("Please enable a network connection");
+				}
+			}
+		});
+
+		// Header for listview
+		View quakeListHeader = this.getLayoutInflater().inflate(
+				R.layout.quake_list_header, null);
+		listviewQuakes.addHeaderView(quakeListHeader);
+
+		// Create Array adapter using mag string array
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+				this, R.array.magArray, android.R.layout.simple_spinner_item);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		magSpinner.setAdapter(adapter);
+
+		// network connection tester
+		connectivityClass initialConnectionCheck = new connectivityClass();
+		mContext = this;
+
+//		if (savedInstanceState != null) {
+//			// Toast.makeText(mContext, "THERE IS A SAVED INSTANCE!",
+//			// Toast.LENGTH_SHORT).show();
+//			myQuakeList = (ArrayList<HashMap<String, String>>) savedInstanceState
+//					.getSerializable("saved");
+//
+//			if (myQuakeList != null) {
+//
+//				// adapter to display saved serialized data on the listview
+//				SimpleAdapter mySimpleAdapter = new SimpleAdapter(mContext,
+//						myQuakeList, R.layout.quake_list_row, new String[] {
+//								"magnitude", "time", "place" },
+//						new int[] { R.id.locMag, R.id.locTime,
+//								R.id.locDescription });
+//
+//				listviewQuakes.setAdapter(mySimpleAdapter);
+//
+//				// set listener for spinner
+//				magSpinner.setOnItemSelectedListener(this);
+//			} else {
+//				Log.d("MAIN", "myQuakeList is Null");
+//			}
+//
+//			// if there is no saved instance, go get data and display it
+//		} else {
+
+			// create instance of filemanager
+			fileManager = FileManager.getInstance();
+
+			// set listener for spinner
+			magSpinner.setOnItemSelectedListener(this);
+
+			// handler for QuakeDownloadService
+			final Handler quakeDownloadHandler = new HandlerExtension();
+
+			passedMagString = "All Recent Quakes";
+			Log.i("OnSpinnerSelected", passedMagString);
+			Messenger quakeMessenger = new Messenger(quakeDownloadHandler);
+			String passThisMag = passedMagString;
+			Log.i("MessengerArea", passThisMag);
+
+			// Intent, pass information to QuakeDownloadService
+			Intent startQuakeIntent = new Intent(this,
+					QuakeDownloadService.class);
+			startQuakeIntent.putExtra(QuakeDownloadService.MESSENGER_KEY,
+					quakeMessenger);
+			startQuakeIntent.putExtra(QuakeDownloadService.QUAKEMAG_KEY,
+					passThisMag);
+
+			// start intent if there is a connection
+			if (initialConnectionCheck.connectionStatus(mContext)) {
+				startService(startQuakeIntent);
+			} else {
+				resultText.setText("Please enable a network connection");
+			}
+
+//		}
+		super.onCreate(savedInstanceState);
+
+	}
+
+	// onItem Selected for spinner
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * android.widget.AdapterView.OnItemSelectedListener#onItemSelected(android
+	 * .widget.AdapterView, android.view.View, int, long)
+	 */
+	@Override
+	public void onItemSelected(AdapterView<?> parent, View view, int position,
+			long id) {
+		final connectivityClass neConn = new connectivityClass();
+		if (neConn.connectionStatus(mContext)) {
+			searchQ.setText("");
+
+			// pass URI to provider depending on the selected spinner item
+			passedMagString = magString[position];
+			Log.i("OnSpinnerSelected", passedMagString);
+
+			if (passedMagString.equalsIgnoreCase("4.5+")) {
+				displayURI = Uri
+						.parse("content://com.jbentley.earthquake.QuakeProvider/quakeMag4.5");
+				displayQuakes(displayURI);
+			} else if (passedMagString.equalsIgnoreCase("2.5+")) {
+				displayURI = Uri
+						.parse("content://com.jbentley.earthquake.QuakeProvider/quakeMag2.5");
+				displayQuakes(displayURI);
+			} else if (passedMagString.equalsIgnoreCase("1.0+")) {
+				displayURI = Uri
+						.parse("content://com.jbentley.earthquake.QuakeProvider/quakeMag1.0");
+				displayQuakes(displayURI);
+			} else if (passedMagString.equalsIgnoreCase("All Recent Quakes")) {
+				displayURI = Uri
+						.parse("content://com.jbentley.earthquake.QuakeProvider/allQuakes");
+				displayQuakes(displayURI);
+
+			}
+
+		} else {
+			Toast.makeText(mContext, "Sorry. Network connection is required",
+					Toast.LENGTH_LONG).show();
+		}
+
+	}
+
+	// function to display quake data into a listview using hashmap.
+	// JSON data comes from a stored file that is called from FileManager
+	/**
+	 * Display quakes.
+	 */
+	public void displayQuakes(Uri uri) {
+
+		// Cursor to get desired data back from an already downloaded file
+		Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+		if (cursor == null) {
+			Toast.makeText(this, "Cursor is Null", Toast.LENGTH_LONG).show();
+			Log.i(TAG, "Cursor is NULL!!");
+		}
+
+		myQuakeList = new ArrayList<HashMap<String, String>>();
+
+		if (myQuakeList != null) {
+			myQuakeList.clear();
+
+		}
+		Log.i("Curosr Count", String.valueOf(cursor.getCount()));
+
+		// earthquake count to display at the top of the view
+		topTextView.setText("Displaying " + cursor.getCount() + " quakes.");
+
+		// if there are no quakes in the cursor to display
+		if (cursor.getCount() == 0) {
+			Toast.makeText(mContext, "No earthquakes match your criteria.",
+					Toast.LENGTH_LONG).show();
+			
+		}
+		if (cursor.moveToFirst() == true) {
+
+			// loop through Cursor to parse and place into a listview
+			for (int i = 0; i < cursor.getCount(); i++) {
+
+				HashMap<String, String> hashMapper = new HashMap<String, String>();
+
+				hashMapper.put("magnitude", cursor.getString(5));
+				hashMapper.put("time", cursor.getString(4));
+				hashMapper.put("place", cursor.getString(3));
+				hashMapper.put("longC", cursor.getString(2));
+				hashMapper.put("lat", cursor.getString(1));
+
+				// String latPassed = cursor.getString(4);
+				// Log.i("LAT", latPassed);
+				cursor.moveToNext();
+
+				resultText.setText("");
+
+				myQuakeList.add(hashMapper);
+
+			}
+
+			// adapter to display data on the listview
+			SimpleAdapter mySimpleAdapter = new SimpleAdapter(mContext,
+					myQuakeList, R.layout.quake_list_row, new String[] {
+							"magnitude", "time", "place" }, new int[] {
+							R.id.locMag, R.id.locTime, R.id.locDescription });
+
+			listviewQuakes.setAdapter(mySimpleAdapter);
+
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * android.widget.AdapterView.OnItemSelectedListener#onNothingSelected(android
+	 * .widget.AdapterView)
+	 */
+	@Override
+	public void onNothingSelected(AdapterView<?> arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		
+		
+		
+	}
+
+	//save instance
+//	@Override
+//	protected void onSaveInstanceState(Bundle outState) {
+//		super.onSaveInstanceState(outState);
+//
+//		if (myQuakeList != null && !myQuakeList.isEmpty()) {
+//			outState.putSerializable("saved", (Serializable) myQuakeList);
+//			Log.i(TAG, "Saving Instance State data");
+//			// Log.i(TAG, myQuakeList.toString());
+//		}
+//	}
+
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.map_quake, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		// TODO Auto-generated method stub
+		return super.onMenuItemSelected(featureId, item);
+	}
+	
+	
+	
+
+}

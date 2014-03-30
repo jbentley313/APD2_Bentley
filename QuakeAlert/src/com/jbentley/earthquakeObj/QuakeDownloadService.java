@@ -40,6 +40,7 @@ public class QuakeDownloadService extends IntentService {
 	public static final String MESSENGER_KEY = "messenger";
 	public static final String QUAKEMAG_KEY = "quake";
 	public static String responseString = "";
+	public static  boolean isDoneLoading = false;
 
 	/**
 	 * Instantiates a new quake download service.
@@ -65,6 +66,7 @@ public class QuakeDownloadService extends IntentService {
 		String magChosen = (String) extras.get(QUAKEMAG_KEY);
 		URL passedURL;
 		passedURL = null;
+		QuakeDownloadService.isDoneLoading = false;
 		if (magChosen.equalsIgnoreCase("All Recent Quakes")) {
 			try {
 				passedURL = new URL(
@@ -110,13 +112,19 @@ public class QuakeDownloadService extends IntentService {
 			while ((byteRead = bufferInputStream.read(contextBytes)) != -1) {
 				response = new String(contextBytes, 0, byteRead);
 				responseBuffer.append(response);
+//				Log.i("NO", "not done yet   " + String.valueOf(isDoneLoading));
+				
+				
 			}
 			response = responseBuffer.toString();
+			QuakeDownloadService.isDoneLoading = true;
+//			Log.i("YES", "DONEEEEEEEEEEEE     " + String.valueOf(isDoneLoading));
 
 		} catch (IOException e) {
 			response = "NO INFO PASSED";
 			Log.e("IOEXCEPTION", response);
 		}
+		
 		return response;
 
 	}

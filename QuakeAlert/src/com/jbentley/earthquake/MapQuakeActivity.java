@@ -9,6 +9,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -63,9 +65,19 @@ public class MapQuakeActivity extends Activity {
 					R.id.map)).getMap();
 			mMap.addMarker(new MarkerOptions().position(new LatLng(lat, longC))
 					.title(""));
+			
+			
+			// Instantiates a new CircleOptions object and defines the center and radius
+			CircleOptions circleOptions = new CircleOptions()
+			    .center(new LatLng(lat, longC))
+			    .radius(1000); // In meters
+
+			
+			mMap.addCircle(circleOptions);
+			
 
 			CameraPosition quakeCam = new CameraPosition.Builder()
-					.target(new LatLng(lat, longC)).zoom(8) // Sets the zoom
+					.target(new LatLng(lat, longC)).zoom(10) // Sets the zoom
 					.bearing(0) // Sets the orientation of the camera (degrees)
 					.tilt(30) // Sets the tilt of the camera to 30 degrees
 					.build();

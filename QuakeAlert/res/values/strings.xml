@@ -24,5 +24,6 @@
     <string name="loc_data">Loc data</string>
     <string name="back">back</string>
     <string name="learn_about_earthquake_safety">Learn about Earthquake Safety</string>
+    <string name="refresh">refresh</string>
 
 </resources>

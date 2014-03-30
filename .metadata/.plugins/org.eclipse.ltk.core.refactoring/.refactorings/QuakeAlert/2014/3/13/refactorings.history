@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Extracts string &apos;refresh&apos; into R.string.refresh" description="Extracts string &apos;refresh&apos; into R.string.refresh" file="/QuakeAlert/res/menu/map_quake.xml" flags="6" id="com.android.ide.eclipse.adt.refactoring.extract.string" mode="EDIT_SOURCE" proj="/QuakeAlert" rplc-all-java="false" rplc-all-xml="false" sel-end="370" sel-start="348" stamp="1396130186364" tok-esc="refresh" xml-attr-name="android:title"/>
+</session>

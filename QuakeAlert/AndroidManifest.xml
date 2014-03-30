@@ -41,6 +41,11 @@
             android:name=".MapQuakeActivity"
             android:label="@string/mapquakeact" >
         </activity>
+        
+        <activity
+            android:name=".SingleQuake"
+            android:label="singleQuake" >
+        </activity>
 
         <service android:name="com.jbentley.earthquakeObj.QuakeDownloadService" >
         </service>
