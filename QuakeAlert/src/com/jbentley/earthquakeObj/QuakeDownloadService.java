@@ -64,6 +64,8 @@ public class QuakeDownloadService extends IntentService {
 		Bundle extras = intent.getExtras();
 		Messenger messenger = (Messenger) extras.get(MESSENGER_KEY);
 		String magChosen = (String) extras.get(QUAKEMAG_KEY);
+		Log.i("QDLS", magChosen);
+		
 		URL passedURL;
 		passedURL = null;
 		QuakeDownloadService.isDoneLoading = false;
@@ -80,7 +82,7 @@ public class QuakeDownloadService extends IntentService {
 			}
 
 		}
-		Log.i(Tag, magChosen);
+//		Log.i(Tag, magChosen);
 
 		// pass the message back to MainActivity --handler
 		Message message = Message.obtain();
@@ -89,6 +91,8 @@ public class QuakeDownloadService extends IntentService {
 
 		try {
 			messenger.send(message);
+////			
+////			Log.i("mes", message.toString());
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -125,6 +129,7 @@ public class QuakeDownloadService extends IntentService {
 			Log.e("IOEXCEPTION", response);
 		}
 		
+//		Log.i("QDLS RESP", response);
 		return response;
 
 	}

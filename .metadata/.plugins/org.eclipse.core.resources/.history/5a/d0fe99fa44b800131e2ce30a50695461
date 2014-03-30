@@ -1,0 +1,8 @@
+package com.jbentley.earthquake;
+
+import android.preference.PreferenceFragment;
+
+public class PreferencesFrag extends PreferenceFragment{
+	
+
+}

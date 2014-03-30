@@ -15,8 +15,8 @@ import java.util.HashMap;
 import com.jbentley.connectivityPackage.connectivityClass;
 import com.jbentley.earthquakeObj.FileManager;
 import com.jbentley.earthquakeObj.QuakeDownloadService;
-
 import android.net.Uri;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -41,6 +41,7 @@ import android.widget.Toast;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 
 // TODO: Auto-generated Javadoc
@@ -62,22 +63,28 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 		@Override
 		public void handleMessage(Message msg) {
 
-			String response = null;
+			// create instance of filemanager
+			fileManager = FileManager.getInstance();
 
+			String response = null;
+			Log.i("MAIN", "HANDLER ON  MAIN");
 			if (msg.arg1 == RESULT_OK && msg.obj != null) {
 
 				try {
 					response = (String) msg.obj;
+					Log.i("MAItryN", "HANDLER ON  MAIN");
+					Log.i("RESULTS MAINACT HANDLER", response.toString());
 				} catch (Exception e) {
 					Log.e("handleMessage", e.getMessage().toString());
+					Log.d(TAG, "ERROR!!");
 				}
 
 				resultText.setText("");
 
 				// save the response to the filemanager
 				fileManager.writeStringFile(mContext, fileName, response);
-
-
+				magSpinnerSafe = true;
+				spinnerInitiate();
 			}
 		}
 	}
@@ -98,6 +105,9 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 	// ArrayList<HashMap<String, String, String>> myQuakeList;
 	ArrayList<HashMap<String, String>> myQuakeList;
 	SimpleAdapter mySimpleAdapter;
+	Spinner magSpinner;
+	Boolean magSpinnerSafe;
+	SharedPreferences mySharedPrefs;
 
 	/*
 	 * (non-Javadoc)
@@ -115,6 +125,8 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 
 		// listview to display quake data
 		listviewQuakes = (ListView) this.findViewById(R.id.list);
+
+		magSpinnerSafe = false;
 
 		listviewQuakes.setOnItemClickListener(new OnItemClickListener() {
 
@@ -167,7 +179,8 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 
 		// Spinner and adapter for magnitude
 		magString = getResources().getStringArray(R.array.magArray);
-		Spinner magSpinner = (Spinner) findViewById(R.id.magSpinner);
+		magSpinner = (Spinner) findViewById(R.id.magSpinner);
+
 
 		// Search equakes text and button
 		searchQ = (EditText) findViewById(R.id.searchQuakes);
@@ -243,8 +256,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 		//			// if there is no saved instance, go get data and display it
 		//		} else {
 
-		// create instance of filemanager
-		fileManager = FileManager.getInstance();
+
 
 		// set listener for spinner
 		magSpinner.setOnItemSelectedListener(this);
@@ -297,22 +309,10 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 			passedMagString = magString[position];
 			Log.i("OnSpinnerSelected", passedMagString);
 
-			if (passedMagString.equalsIgnoreCase("4.5+")) {
-				displayURI = Uri
-						.parse("content://com.jbentley.earthquake.QuakeProvider/quakeMag4.5");
-				displayQuakes(displayURI);
-			} else if (passedMagString.equalsIgnoreCase("2.5+")) {
-				displayURI = Uri
-						.parse("content://com.jbentley.earthquake.QuakeProvider/quakeMag2.5");
-				displayQuakes(displayURI);
-			} else if (passedMagString.equalsIgnoreCase("1.0+")) {
-				displayURI = Uri
-						.parse("content://com.jbentley.earthquake.QuakeProvider/quakeMag1.0");
-				displayQuakes(displayURI);
-			} else if (passedMagString.equalsIgnoreCase("All Recent Quakes")) {
-				displayURI = Uri
-						.parse("content://com.jbentley.earthquake.QuakeProvider/allQuakes");
-				displayQuakes(displayURI);
+			if(magSpinnerSafe == true){
+				spinnerInitiate();
+			}
+			else {
 
 			}
 
@@ -403,14 +403,17 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 
 	}
 
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
+		@Override
+		protected void onResume() {
+			// TODO Auto-generated method stub
+			super.onResume();
+			
+			
+
+			
 
 
-
-	}
+		}
 
 	//save instance
 	//	@Override
@@ -439,11 +442,11 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 
 		if(itemId == R.id.action_refresh){
 			// handler for QuakeDownloadService
-			final Handler quakeDownloadHandler = new HandlerExtension();
+			final Handler quakeDownloadHandlerZZZZZ = new HandlerExtension();
 
 			String allRecentQuakes = "All Recent Quakes";
 			Log.i("OnSpinnerSelected", allRecentQuakes);
-			Messenger quakeMessenger = new Messenger(quakeDownloadHandler);
+			Messenger quakeMessenger = new Messenger(quakeDownloadHandlerZZZZZ);
 			String passThisMag = allRecentQuakes;
 			Log.i("MessengerArea", passThisMag);
 
@@ -462,39 +465,27 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 			//						passedMagString = magString;
 			Log.i("OnSpinnerSelected", passedMagString);
 
-			if (passedMagString.equalsIgnoreCase("4.5+")) {
-				displayURI = Uri
-						.parse("content://com.jbentley.earthquake.QuakeProvider/quakeMag4.5");
 
-			} else if (passedMagString.equalsIgnoreCase("2.5+")) {
-				displayURI = Uri
-						.parse("content://com.jbentley.earthquake.QuakeProvider/quakeMag2.5");
-
-			} else if (passedMagString.equalsIgnoreCase("1.0+")) {
-				displayURI = Uri
-						.parse("content://com.jbentley.earthquake.QuakeProvider/quakeMag1.0");
-
-			} else if (passedMagString.equalsIgnoreCase("All Recent Quakes")) {
-				displayURI = Uri
-						.parse("content://com.jbentley.earthquake.QuakeProvider/allQuakes");
-
-
-			}
+//			final Handler handler = new Handler();
+//			handler.postDelayed(new Runnable() {
+//				@Override
+//				public void run() {
+//					// Try after 2s = 2000ms
+//					Toast.makeText(mContext, "Quakes refreshed!", Toast.LENGTH_LONG).show();
+//
+//
+//					spinnerInitiate();
+//					mySimpleAdapter.notifyDataSetChanged();
+//
+//				}
+//			}, 2000);
 
 
-			final Handler handler = new Handler();
-			handler.postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					// Try after 2s = 2000ms
-					Toast.makeText(mContext, "Quakes refreshed!", Toast.LENGTH_LONG).show();
-					
-						
-						displayQuakes(displayURI);
-						mySimpleAdapter.notifyDataSetChanged();
-					
-				}
-			}, 2000);
+		}
+
+		if (itemId ==  R.id.action_settings) {
+			Intent settingsIntent = new Intent (this, PrefDisplayActivity.class);
+			startActivity(settingsIntent);
 
 
 		}
@@ -502,7 +493,29 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 		return false;
 	}
 
+	private void spinnerInitiate(){
 
+		if (passedMagString.equalsIgnoreCase("4.5+")) {
+			displayURI = Uri
+					.parse("content://com.jbentley.earthquake.QuakeProvider/quakeMag4.5");
+
+		} else if (passedMagString.equalsIgnoreCase("2.5+")) {
+			displayURI = Uri
+					.parse("content://com.jbentley.earthquake.QuakeProvider/quakeMag2.5");
+
+		} else if (passedMagString.equalsIgnoreCase("1.0+")) {
+			displayURI = Uri
+					.parse("content://com.jbentley.earthquake.QuakeProvider/quakeMag1.0");
+
+		} else if (passedMagString.equalsIgnoreCase("All Recent Quakes")) {
+			displayURI = Uri
+					.parse("content://com.jbentley.earthquake.QuakeProvider/allQuakes");
+
+
+		}
+		displayQuakes(displayURI);
+
+	}
 
 
 }

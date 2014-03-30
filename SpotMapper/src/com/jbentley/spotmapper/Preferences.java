@@ -186,7 +186,7 @@ public class Preferences extends PreferenceFragment implements OnPreferenceClick
 					Log.i("Contact: ",  contactNameString + ", " + contactNumberString );
 					myEditor.putString("contact:" + contactNumberString, contactNameString);
 					myEditor.commit();
-					logAllContacts();
+//					logAllContacts();
 
 				} else {
 					Log.i("Prefs", "Cursor empty, no results");

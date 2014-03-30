@@ -1,0 +1,52 @@
+package com.jbentley.earthquake;
+
+
+
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.os.Bundle;
+import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+public class PreferencesFrag extends PreferenceFragment implements OnSharedPreferenceChangeListener{
+	
+	private SharedPreferences mySharedPrefs;
+	private Editor myEditor;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		Log.i("PreferencesFrag", "hello");
+		addPreferencesFromResource(R.xml.preferences);
+		
+		
+		//get shared prefs
+				mySharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+				mySharedPrefs.registerOnSharedPreferenceChangeListener(this);
+				myEditor = mySharedPrefs.edit();
+		
+}
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		View view = super.onCreateView(inflater, container, savedInstanceState);
+		//change bg color of pref frag
+		view.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_bright));
+		return view;
+	}
+
+	@Override
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+			String key) {
+		// TODO Auto-generated method stub
+		
+	}
+}

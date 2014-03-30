@@ -15,18 +15,27 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 
 public class MapQuakeActivity extends Activity {
 	JSONObject passedQuakeObj;
+	GoogleMap mMap;
+	SharedPreferences mySharedPrefs;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_map_quake);
 		// TextView locationTextView = (TextView) findViewById(R.id.locDisplay);
+		
+		mySharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		
 
 		//get quakeObject extras from main activity
 		Bundle data = getIntent().getExtras();
@@ -59,10 +68,11 @@ public class MapQuakeActivity extends Activity {
 			double lat = Double.parseDouble(lastLat);
 			double longC = Double.parseDouble(lastLong);
 
-			//google MAP
-			GoogleMap mMap;
+			
 			mMap = ((MapFragment) getFragmentManager().findFragmentById(
 					R.id.map)).getMap();
+			//
+			
 			mMap.addMarker(new MarkerOptions().position(new LatLng(lat, longC))
 					.title(""));
 			
@@ -88,11 +98,71 @@ public class MapQuakeActivity extends Activity {
 		}
 	}
 
+	
+	
+	
+
+	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.map_quake, menu);
+		// TODO Auto-generated method stub
+		
+		getMenuInflater().inflate(R.menu.quake_activity_menu, menu);
+		
 		return true;
 	}
+
+
+
+
+
+
+
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		// TODO Auto-generated method stub
+		
+		int itemId = item.getItemId();
+		
+		if (itemId ==  R.id.action_settings) {
+			Intent settingsIntent = new Intent (this, PrefDisplayActivity.class);
+			startActivity(settingsIntent);
+
+
+		}
+		return false;
+		
+		
+	}
+
+
+
+
+
+
+
+	
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		String mapType = mySharedPrefs.getString("mapDisplayPref", "map");
+		
+		if(mapType.equalsIgnoreCase("1")){
+			Log.i("MAPTYPE", "Normal map");
+			mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+		} else if(mapType.equalsIgnoreCase("2")){
+			Log.i("MAPTYPE", "Satellite");
+			mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+		} else if(mapType.equalsIgnoreCase("3")){
+			Log.i("MAPTYPE", "Hybrid");
+			mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+		}
+	}
+	
+	
 
 }

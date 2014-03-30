@@ -1,0 +1,128 @@
+package com.jbentley.earthquake;
+
+
+
+import java.util.Map;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.DialogInterface.OnClickListener;
+import android.content.SharedPreferences.Editor;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
+import android.provider.ContactsContract.Contacts;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
+
+public class PreferencesFrag extends PreferenceFragment implements OnSharedPreferenceChangeListener{
+	
+	private static final int CONTACT_PICKER_RESULT = 303;
+	private SharedPreferences mySharedPrefs;
+	private Editor myEditor;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		Log.i("PreferencesFrag", "hello");
+		addPreferencesFromResource(R.xml.preferences);
+		
+		
+		//get shared prefs
+				mySharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+				mySharedPrefs.registerOnSharedPreferenceChangeListener(this);
+				myEditor = mySharedPrefs.edit();
+		
+}
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		View view = super.onCreateView(inflater, container, savedInstanceState);
+		//change bg color of pref frag
+		view.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_bright));
+		return view;
+	}
+
+	@Override
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+			String key) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	//preference click handler
+		@Override
+		public boolean onPreferenceClick(Preference preferenceClicked) {
+			// TODO Auto-generated method stub
+
+			//add contact
+			if (preferenceClicked.getKey().equalsIgnoreCase("contact_pref")){
+				Log.i("Pref", "contactprefpicker");
+				Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, Contacts.CONTENT_URI);
+				startActivityForResult(contactPickerIntent, CONTACT_PICKER_RESULT);
+
+				return true;
+
+			} else if (preferenceClicked.getKey().equalsIgnoreCase("del_con")){
+
+				Log.i("preference click", "delete");
+
+				//alert for confirmation of delete
+				new AlertDialog.Builder(getActivity())
+
+				.setTitle("Delete all saved emergency contacts?")
+				.setMessage("This cannot be undone!")
+				.setPositiveButton("Delete", new OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						//get all shared prefs and get contacts
+						Map<String,?> prefString = (Map<String, ?>) mySharedPrefs.getAll();
+						int sizeOfPrefs = (prefString.size());
+
+						//emergency contacts are not empty
+						if(sizeOfPrefs != 2 ){
+							for(Map.Entry<String,?> entry : prefString.entrySet()){
+
+								String number = entry.getKey().toString();
+
+								//remove contacts from shared prefs that contain "contact" as first part of key
+								if(number.contains("contact")){
+
+									Log.i("contact", number);
+									myEditor.remove(number);
+									myEditor.commit();
+								}
+							}
+
+							//emergency contacts are empty
+						} else {
+
+							//formt summary for emergency contacts
+							preference = findPreference("contact_pref");
+							preference.setSummary("No contacts saved");
+
+							Toast.makeText(getActivity(), "No contacts to delete", Toast.LENGTH_SHORT).show();
+						}
+					}
+
+				})
+
+				.setCancelable(true)
+				.setNegativeButton("Cancel", null)
+				.show();
+				
+			}
+			return false;
+		}
+}

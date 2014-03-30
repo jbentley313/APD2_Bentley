@@ -20,6 +20,7 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
     <application
         android:allowBackup="true"
@@ -28,9 +29,9 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.jbentley.earthquake.MainActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
-            android:windowSoftInputMode="stateHidden"
-            android:configChanges="orientation|screenSize" >
+            android:windowSoftInputMode="stateHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -38,12 +39,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MapQuakeActivity"
+            android:name="com.jbentley.earthquake.MapQuakeActivity"
             android:label="@string/mapquakeact" >
         </activity>
-        
         <activity
-            android:name=".SingleQuake"
+            android:name="com.jbentley.earthquake.SingleQuake"
             android:label="singleQuake" >
         </activity>
 
@@ -51,7 +51,7 @@
         </service>
 
         <provider
-            android:name="QuakeProvider"
+            android:name="com.jbentley.earthquake.QuakeProvider"
             android:authorities="com.jbentley.earthquake.QuakeProvider"
             android:exported="true" >
         </provider>
@@ -63,6 +63,15 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" >
         </meta-data>
+
+        <activity
+            android:name="com.jbentley.earthquake.PreferencesFrag"
+            android:label="@string/settings" >
+        </activity>
+        <activity
+            android:name="com.jbentley.earthquake.PrefDisplayActivity"
+            android:label="@string/settings" >
+        </activity>
     </application>
 
 </manifest>
