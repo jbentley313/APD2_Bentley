@@ -390,24 +390,6 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 		// TODO Auto-generated method stub
 
 	}
-	
-	
-	
-	
-
-		@Override
-	protected void onPause() {
-		// TODO Auto-generated method stub
-		super.onPause();
-		refreshButtonClicked = false;
-	}
-
-	@Override
-	protected void onDestroy() {
-		// TODO Auto-generated method stub
-		super.onDestroy();
-		refreshButtonClicked = false;
-	}
 
 		@Override
 		protected void onResume() {

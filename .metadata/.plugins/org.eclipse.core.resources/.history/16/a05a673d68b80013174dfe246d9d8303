@@ -88,13 +88,11 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 					Toast.makeText(mContext, "Quakes are up to date", Toast.LENGTH_SHORT).show();
 				}
 				
-				
+				refreshButtonClicked = false;
 				
 				
 			}
-			refreshButtonClicked = false;
 		}
-		
 	}
 
 	Context mContext;
@@ -389,24 +387,6 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 	public void onNothingSelected(AdapterView<?> arg0) {
 		// TODO Auto-generated method stub
 
-	}
-	
-	
-	
-	
-
-		@Override
-	protected void onPause() {
-		// TODO Auto-generated method stub
-		super.onPause();
-		refreshButtonClicked = false;
-	}
-
-	@Override
-	protected void onDestroy() {
-		// TODO Auto-generated method stub
-		super.onDestroy();
-		refreshButtonClicked = false;
 	}
 
 		@Override

@@ -89,12 +89,8 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 				}
 				
 				
-				
-				
 			}
-			refreshButtonClicked = false;
 		}
-		
 	}
 
 	Context mContext;
@@ -390,24 +386,6 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 		// TODO Auto-generated method stub
 
 	}
-	
-	
-	
-	
-
-		@Override
-	protected void onPause() {
-		// TODO Auto-generated method stub
-		super.onPause();
-		refreshButtonClicked = false;
-	}
-
-	@Override
-	protected void onDestroy() {
-		// TODO Auto-generated method stub
-		super.onDestroy();
-		refreshButtonClicked = false;
-	}
 
 		@Override
 		protected void onResume() {
@@ -466,9 +444,6 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		// TODO Auto-generated method stub
-		
-		refreshButtonClicked = true;
-		
 		int itemId = item.getItemId();
 
 		if(itemId == R.id.action_refresh){
