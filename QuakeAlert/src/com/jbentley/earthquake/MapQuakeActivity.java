@@ -67,6 +67,21 @@ public class MapQuakeActivity extends Activity {
 
 			double lat = Double.parseDouble(lastLat);
 			double longC = Double.parseDouble(lastLong);
+			
+			String fhMag[] = firstHalf.split("magnitude");
+			String mag1 = fhMag[0];
+			String mag2 = fhMag[1];
+			
+			say("sec", mag2);
+			
+			String mag3[] = mag2.split(",");
+			String mag = mag3[0].replace("=", "");
+			say("mag", mag);
+			
+			float magFromString = Float.parseFloat(mag);
+			
+			
+			
 
 			
 			mMap = ((MapFragment) getFragmentManager().findFragmentById(
@@ -80,14 +95,15 @@ public class MapQuakeActivity extends Activity {
 			// Instantiates a new CircleOptions object and defines the center and radius
 			CircleOptions circleOptions = new CircleOptions()
 			    .center(new LatLng(lat, longC))
-			    .radius(1000); // In meters
+			    .radius(magFromString *  2 * 3 * 4 * 4 *  6 * 7 ); // In meters
 
 			
 			mMap.addCircle(circleOptions);
 			
 
 			CameraPosition quakeCam = new CameraPosition.Builder()
-					.target(new LatLng(lat, longC)).zoom(10) // Sets the zoom
+					.target(new LatLng(lat, longC))
+					.zoom(9) // Sets the zoom
 					.bearing(0) // Sets the orientation of the camera (degrees)
 					.tilt(30) // Sets the tilt of the camera to 30 degrees
 					.build();
@@ -163,6 +179,8 @@ public class MapQuakeActivity extends Activity {
 		}
 	}
 	
-	
+	public void say(String tag, String msg){
+		Log.i(tag, msg);
+	}
 
 }

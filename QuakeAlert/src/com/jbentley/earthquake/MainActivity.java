@@ -118,6 +118,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 	SharedPreferences mySharedPrefs;
 	connectivityClass initialConnectionCheck;
 	Boolean refreshButtonClicked = false;
+	SingleQuake snglQuake;
 
 	/*
 	 * (non-Javadoc)
@@ -156,6 +157,9 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 				// Log.i("ListView Selected item",quakeObj.toString());
 				//
 				//
+				
+				
+////////////////////				
 				Intent mapIntent = new Intent(mContext, MapQuakeActivity.class);
 				mapIntent.putExtra("quakeObject", (Serializable) quakeObj);
 
@@ -350,6 +354,9 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 
 				HashMap<String, String> hashMapper = new HashMap<String, String>();
 
+				
+				snglQuake = new SingleQuake(cursor.getString(3), cursor.getString(1), cursor.getString(2), cursor.getString(4),cursor.getString(5) );
+				
 				hashMapper.put("magnitude", cursor.getString(5));
 				hashMapper.put("time", cursor.getString(4));
 				hashMapper.put("place", cursor.getString(3));

@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="com.google.android.gms.location.Geofence.Builder"/>
-<fullyQualifiedTypeName name="java.util.Map"/>
-<fullyQualifiedTypeName name="android.preference.PreferenceManager"/>
-<fullyQualifiedTypeName name="android.content.SharedPreferences"/>
 <fullyQualifiedTypeName name="com.jbentley.spotmapper.SingleGeoFence"/>
 <fullyQualifiedTypeName name="com.jbentley.spotmapper.SingleGeoFence.SingleGeoFenceStore"/>
 <fullyQualifiedTypeName name="com.jbentley.spotmapper.TransistionReceivedIntentSevice"/>
@@ -48,7 +44,6 @@
 <fullyQualifiedTypeName name="android.provider.Telephony.Sms"/>
 <fullyQualifiedTypeName name="com.google.android.gms.maps.model.CircleOptions"/>
 <fullyQualifiedTypeName name="com.google.android.gms.maps.model.Circle"/>
-<fullyQualifiedTypeName name="android.widget.Toast"/>
 <fullyQualifiedTypeName name="com.jbentley.earthquakeObj.FileManager"/>
 <fullyQualifiedTypeName name="com.jbentley.earthquakeObj.QuakeDownloadService"/>
 <fullyQualifiedTypeName name="android.widget.ArrayAdapter"/>
@@ -57,7 +52,12 @@
 <fullyQualifiedTypeName name="com.jbentley.earthquake.R.id"/>
 <fullyQualifiedTypeName name="com.jbentley.earthquake.PreferencesFrag"/>
 <fullyQualifiedTypeName name="com.jbentley.earthquake.PrefDisplayActivity"/>
-<fullyQualifiedTypeName name="android.util.Log"/>
 <fullyQualifiedTypeName name="android.R.color"/>
 <fullyQualifiedTypeName name="android.preference.Preference.OnPreferenceClickListener"/>
+<fullyQualifiedTypeName name="android.opengl.Visibility"/>
+<fullyQualifiedTypeName name="java.lang.Boolean"/>
+<fullyQualifiedTypeName name="android.content.SharedPreferences"/>
+<fullyQualifiedTypeName name="android.preference.PreferenceManager"/>
+<fullyQualifiedTypeName name="android.util.Log"/>
+<fullyQualifiedTypeName name="android.widget.Toast"/>
 </qualifiedTypeNameHistroy>

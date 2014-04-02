@@ -1,0 +1,25 @@
+package com.jbentley.earthquake;
+
+public class SingleQuake {
+	int _id;
+	String _locationDescription;
+	String _locationLatitude;
+	String _locationLongitude;
+	String _savedDateTime;
+
+
+	public SingleQuake(){
+
+	}
+	
+	public SingleQuake(String desc, String lat, String lng, String saveTime){
+		this._locationDescription = desc;
+		this._locationLatitude = lng;
+		this._savedDateTime = saveTime;
+	}
+	
+	public String getDesc(){
+		return _locationDescription;
+	}
+
+}
