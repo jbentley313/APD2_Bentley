@@ -432,7 +432,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 			}
 			
 //			passedMagString = "All Recent Quakes";
-			say(TAG, passedMagString);
+//			say(TAG, passedMagString);
 //			Log.i("OnSpinnerSelected", passedMagString);
 			Messenger quakeMessenger = new Messenger(quakeDownloadHandler);
 			String passThisMag = passedMagString;

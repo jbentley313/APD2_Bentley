@@ -102,7 +102,6 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 	static String TAG = "MAINACTIVITY";
 	String[] magString;
 	private String passedMagString;
-	private String pausedMagString;
 	private TextView resultText;
 	private TextView topTextView;
 	TextView searchQ;
@@ -408,7 +407,6 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 		// TODO Auto-generated method stub
 		super.onPause();
 		refreshButtonClicked = false;
-		pausedMagString = passedMagString;
 	}
 
 	@Override
@@ -427,16 +425,12 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 			// handler for QuakeDownloadService
 			final Handler quakeDownloadHandler = new HandlerExtension();
 
-			if(pausedMagString == null){
-				passedMagString = "All Recent Quakes";
-			}
-			
 //			passedMagString = "All Recent Quakes";
-			say(TAG, passedMagString);
+//			say(TAG, passedMagString);
 //			Log.i("OnSpinnerSelected", passedMagString);
 			Messenger quakeMessenger = new Messenger(quakeDownloadHandler);
-			String passThisMag = passedMagString;
-			Log.i("MessengerArea", passThisMag);
+//			String passThisMag = passedMagString;
+//			Log.i("MessengerArea", passThisMag);
 
 			// Intent, pass information to QuakeDownloadService
 			Intent startQuakeIntent = new Intent(this,
